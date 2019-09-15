@@ -14,8 +14,8 @@ import java.util.ArrayList;
 @Dao
 public interface MyCalendarDao {
 
-    @Query("SELECT * FROM my_calendar")
-    LiveData<ArrayList<MyCalendar>> loadAllCalendarEntries();
+//    @Query("SELECT * FROM my_calendar")
+//    LiveData<ArrayList<MyCalendar>> loadAllCalendarEntries();
 
     @Insert
     void insertCalendarEntry(MyCalendar calendarEntry);

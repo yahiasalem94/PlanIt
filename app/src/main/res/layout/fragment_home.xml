@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <SearchView
+        android:id="@+id/simpleSearchView"
+        android:layout_width="@dimen/search_view_and_button_width"
+        android:layout_height="@dimen/search_view_and_button_height"
+        android:layout_marginStart="@dimen/search_view_margin_start_end"
+        android:layout_marginTop="@dimen/search_view_margin_top"
+        android:layout_marginEnd="@dimen/search_view_margin_start_end"
+        android:background="@drawable/searchview_rounded"
+        android:clickable="true"
+        android:focusable="true"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="@dimen/constraint_horizontal_bias"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+         />
+
+    <TextView
+        android:id="@+id/departure_date"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/departure_arrival_date_tv_top_margin"
+        tools:text="TextView"
+        app:layout_constraintEnd_toStartOf="@+id/imageView"
+        app:layout_constraintHorizontal_bias="@dimen/constraint_horizontal_bias"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/simpleSearchView" />
+
+    <TextView
+        android:id="@+id/arrival_date"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/departure_arrival_date_tv_top_margin"
+        tools:text="TextView"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintEnd_toStartOf="@+id/imageView2"
+        app:layout_constraintHorizontal_bias="@dimen/constraint_horizontal_bias"
+        app:layout_constraintStart_toEndOf="@+id/imageView"
+        app:layout_constraintTop_toBottomOf="@+id/simpleSearchView" />
+
+    <ImageView
+        android:id="@+id/imageView"
+        android:layout_width="20dp"
+        android:layout_height="20dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="36dp"
+        app:layout_constraintEnd_toStartOf="@+id/arrival_date"
+        app:layout_constraintHorizontal_bias="@dimen/constraint_horizontal_bias"
+        app:layout_constraintStart_toEndOf="@+id/departure_date"
+        app:layout_constraintTop_toBottomOf="@+id/simpleSearchView"
+        app:srcCompat="@drawable/calendar" />
+
+    <ImageView
+        android:id="@+id/imageView2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="36dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="@dimen/constraint_horizontal_bias"
+        app:layout_constraintStart_toEndOf="@+id/arrival_date"
+        app:layout_constraintTop_toBottomOf="@+id/simpleSearchView"
+        app:srcCompat="@drawable/calendar" />
+
+    <Button
+        android:id="@+id/search_button"
+        android:layout_width="@dimen/search_view_and_button_width"
+        android:layout_height="@dimen/search_view_and_button_height"
+        android:layout_marginTop="80dp"
+        android:text="@string/lets_go"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/simpleSearchView"
+        android:bottomRightRadius="@dimen/button_corner_radius"
+        android:bottomLeftRadius="@dimen/button_corner_radius"
+        android:topLeftRadius="@dimen/button_corner_radius"
+        android:topRightRadius="@dimen/button_corner_radius"/>
+
+</android.support.constraint.ConstraintLayout>

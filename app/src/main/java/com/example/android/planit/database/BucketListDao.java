@@ -15,8 +15,8 @@ import java.util.ArrayList;
 @Dao
 public interface BucketListDao {
 
-    @Query("SELECT * FROM bucket_list")
-    LiveData<ArrayList<BucketList>> loadAllBucketLists();
+//    @Query("SELECT * FROM bucket_list")
+//    LiveData<ArrayList<BucketList>> loadAllBucketLists();
 
     @Query("SELECT * FROM bucket_list WHERE id = :id")
     BucketList loadBucket(Integer id);
