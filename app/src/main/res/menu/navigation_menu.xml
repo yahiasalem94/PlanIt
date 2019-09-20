@@ -1,14 +1,17 @@
 <?xml version="1.0" encoding="utf-8"?>
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
 
-    <group android:id="@+id/group1">
+
+    <group android:id="@+id/group1"
+        android:checkableBehavior="single">
 
         <item android:id="@+id/home"
             android:title="@string/home"
             android:icon="@drawable/home_icon"/>
     </group>
 
-    <group android:id="@+id/group2">
+    <group android:id="@+id/group2"
+        android:checkableBehavior="single">
 
         <item android:id="@+id/near_me"
             android:title="@string/near_me"/>
@@ -17,7 +20,8 @@
             android:title="@string/ar"/>
     </group>
 
-    <group android:id="@+id/group3">
+    <group android:id="@+id/group3"
+        android:checkableBehavior="single">
 
     <item android:id="@+id/my_bucket_lists"
         android:title="@string/my_bucket_lists"/>
@@ -26,7 +30,8 @@
         android:title="@string/my_calendar"/>
     </group>
 
-    <group android:id="@+id/group4">
+    <group android:id="@+id/group4"
+        android:checkableBehavior="single">
 
     <item android:id="@+id/settings"
         android:title="@string/settings"/>

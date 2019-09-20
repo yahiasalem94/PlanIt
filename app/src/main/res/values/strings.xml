@@ -1,6 +1,5 @@
 <resources>
     <string name="app_name">PlanIt</string>
-    <string name="title_activity_main">MainActivity</string>
 
     <string name="Open">open</string>
     <string name="Close">close</string>
@@ -12,4 +11,7 @@
     <string name="home">Home</string>
     <string name="lets_go">Lets Go</string>
 
+    <string name="date_template">dd/MMM/yyyy</string>
+    <string name="departure_date">Departure Date</string>
+    <string name="arrival_date">Arrival Date</string>
 </resources>
