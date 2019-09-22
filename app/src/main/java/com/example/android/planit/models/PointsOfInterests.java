@@ -2,19 +2,21 @@ package com.example.android.planit.models;
 
 import com.google.gson.annotations.SerializedName;
 
+import java.util.ArrayList;
+
 public class PointsOfInterests {
 
     @SerializedName("name")
     private String name;
     @SerializedName("place_id")
     private String placeId;
+    @SerializedName("photos")
+    private ArrayList <PointOfInterestPhoto> photo;
 
-    private String photoReference;
-
-    public PointsOfInterests(String name, String placeId, String photoReference) {
+    public PointsOfInterests(String name, String placeId, ArrayList <PointOfInterestPhoto> photo) {
         this.name = name;
         this.placeId = placeId;
-        this.photoReference = photoReference;
+        this.photo = photo;
     }
 
     public String getName() {
@@ -29,11 +31,12 @@ public class PointsOfInterests {
 
     public void setPlaceId(String placeId) {this.placeId = placeId; }
 
-    public String getPhotoReference() {
-        return photoReference;
+    public ArrayList <PointOfInterestPhoto> getPhoto() {
+        return photo;
     }
 
-    public void setPhotoReference(String photoReference) {
-        this.photoReference = photoReference;
+    public void setPhoto(ArrayList <PointOfInterestPhoto> photo) {
+        this.photo = photo;
     }
+
 }

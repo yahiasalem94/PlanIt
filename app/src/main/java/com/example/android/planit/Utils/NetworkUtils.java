@@ -23,4 +23,12 @@ public final class NetworkUtils {
         }
         return retrofit;
     }
+
+    public static String buildGooglePhotoUrl(int maxWidth, String photoReference) {
+        String url = Constants.GOOGLE_PLACES_PHOTO + "?maxwidth="+maxWidth
+                +"&photoreference="+photoReference
+                +"&key="+Constants.GOOGLE_API_KEY;
+
+        return url;
+    }
 }

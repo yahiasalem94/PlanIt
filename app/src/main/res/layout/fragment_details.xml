@@ -1,15 +1,131 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.coordinatorlayout.widget.CoordinatorLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
-    android:id="@+id/draw_insets_frame_layout"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent">
+<layout xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    xmlns:android="http://schemas.android.com/apk/res/android">
 
-    <include
-        layout="@layout/fragment_app_bar"
+    <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent" />
+        android:layout_height="match_parent">
 
+        <LinearLayout
+            android:id="@+id/address_layout"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_marginStart="8dp"
+            android:layout_marginTop="40dp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent">
 
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/location_icon"/>
 
-</androidx.coordinatorlayout.widget.CoordinatorLayout>
+            <TextView
+                android:id="@+id/address"
+                android:layout_width="200dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="16dp"
+                tools:text="Jonckbloeatlaan 13J, 5615EM, Eindhoven, Netherlands"/>
+        </LinearLayout>
+
+        <RelativeLayout
+            android:id="@+id/opening_hours_layout"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:layout_marginStart="8dp"
+            android:layout_marginTop="40dp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/address_layout">
+
+        <ImageView
+            android:id="@+id/opening_hours_icon"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/opening_hours_icon"
+            />
+
+        <TextView
+            android:id="@+id/opening_hours_title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="16dp"
+            android:text="@string/opening_hours"
+            android:layout_toEndOf="@+id/opening_hours_icon" />
+
+        <TextView
+            android:id="@+id/monday_opening_hours_tv"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/monday"
+            android:layout_below="@+id/opening_hours_title"
+            android:layout_marginTop="8dp"
+            android:layout_marginStart="48dp" />
+        <TextView
+            android:id="@+id/tuesday_opening_hours_tv"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/tuesday"
+            android:layout_below="@+id/monday_opening_hours_tv"
+            android:layout_marginTop="8dp"
+            android:layout_marginStart="48dp" />
+        <TextView
+            android:id="@+id/wednesday_opening_hours_tv"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/wednesday"
+            android:layout_below="@+id/tuesday_opening_hours_tv"
+            android:layout_marginTop="8dp"
+            android:layout_marginStart="48dp" />
+        <TextView
+            android:id="@+id/thursday_opening_hours_tv"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/thursday"
+            android:layout_below="@+id/wednesday_opening_hours_tv"
+            android:layout_marginTop="8dp"
+            android:layout_marginStart="48dp" />
+        <TextView
+            android:id="@+id/friday_opening_hours_tv"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/friday"
+            android:layout_below="@+id/thursday_opening_hours_tv"
+            android:layout_marginTop="8dp"
+            android:layout_marginStart="48dp" />
+        <TextView
+            android:id="@+id/saturday_opening_hours_tv"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/saturday"
+            android:layout_below="@+id/friday_opening_hours_tv"
+            android:layout_marginTop="8dp"
+            android:layout_marginStart="48dp" />
+        </RelativeLayout>
+
+        <TextView
+            android:id="@+id/reviews_tv"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/reviews"
+            android:layout_marginStart="24dp"
+            android:layout_marginTop="16dp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/opening_hours_layout"/>
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/reviews_recycler_view"
+            android:layout_width="match_parent"
+            android:layout_height="200dp"
+            android:layout_marginTop="8dp"
+            android:layout_marginStart="40dp"
+            android:clipToPadding="false"
+            android:scrollbarStyle="outsideOverlay"
+            app:layout_behavior="@string/appbar_scrolling_view_behavior"
+            app:layout_constraintTop_toBottomOf="@+id/reviews_tv"
+            />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</layout>
