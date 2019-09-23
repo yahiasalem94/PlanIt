@@ -108,6 +108,10 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 navController.navigate(R.id.homeFragment);
                 break;
 
+            case R.id.near_me:
+                navController.navigate(R.id.nearByFragment);
+                break;
+
             case R.id.my_bucket_lists:
                 navController.navigate(R.id.bucketListFragment);
                 break;

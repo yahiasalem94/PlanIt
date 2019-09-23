@@ -6,4 +6,5 @@
     <dimen name="constraint_horizontal_bias">0.5</dimen>
     <dimen name="departure_arrival_date_tv_top_margin">36dp</dimen>
     <dimen name="button_corner_radius">10dp</dimen>
+    <dimen name="toolbar_height">60dp</dimen>
 </resources>

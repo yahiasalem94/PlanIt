@@ -19,6 +19,9 @@
         <action
             android:id="@+id/action_homeFragment_to_bestThingsTodoFragment"
             app:destination="@id/bestThingsTodoFragment" />
+        <action
+            android:id="@+id/action_homeFragment_to_nearByFragment"
+            app:destination="@id/nearByFragment" />
     </fragment>
     <fragment
         android:id="@+id/bucketListFragment"
@@ -49,4 +52,9 @@
         android:id="@+id/detailsFragment"
         android:name="com.example.android.planit.ui.DetailsFragment"
         tools:layout="@layout/fragment_details" />
+    <fragment
+        android:id="@+id/nearByFragment"
+        android:name="com.example.android.planit.ui.NearByFragment"
+        android:label="fragment_nearby"
+        tools:layout="@layout/fragment_nearby" />
 </navigation>
