@@ -8,7 +8,7 @@
         android:id="@+id/card_view"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_margin="@dimen/things_todo_card_margin"
+        android:layout_margin="8dp"
         android:layout_gravity="center">
 
         <androidx.constraintlayout.widget.ConstraintLayout
@@ -21,7 +21,7 @@
                 android:layout_height="wrap_content"
                 android:textSize="18sp"
                 android:textColor="@android:color/darker_gray"
-                android:layout_marginStart="@dimen/name_of_poi_margin_start"
+                android:layout_marginStart="16dp"
                 card_view:layout_constraintStart_toStartOf="parent"
                 card_view:layout_constraintTop_toTopOf="parent"
                 tool:text = "Name of POI"/>
@@ -31,10 +31,11 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:transitionName="@string/transition_image"
-                android:layout_marginTop="@dimen/poi_poster_margin_top"
+                android:layout_marginTop="50dp"
                 android:adjustViewBounds="true"
                 android:scaleType="fitXY"
                 card_view:layout_constraintTop_toBottomOf="@id/nameOfPoi"
+                tool:layout_editor_absoluteX="0dp"
                 tool:src="@drawable/home_icon" />
 
         </androidx.constraintlayout.widget.ConstraintLayout>

@@ -12,8 +12,8 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:orientation="horizontal"
-            android:layout_marginStart="8dp"
-            android:layout_marginTop="40dp"
+            android:layout_marginStart="@dimen/address_layout_margin_start"
+            android:layout_marginTop="@dimen/address_layout_margin_top"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent">
 
@@ -24,9 +24,9 @@
 
             <TextView
                 android:id="@+id/address"
-                android:layout_width="200dp"
+                android:layout_width="@dimen/address_width"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="16dp"
+                android:layout_marginStart="@dimen/address_margin_start"
                 tools:text="Jonckbloeatlaan 13J, 5615EM, Eindhoven, Netherlands"/>
         </LinearLayout>
 
@@ -35,8 +35,8 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:orientation="vertical"
-            android:layout_marginStart="8dp"
-            android:layout_marginTop="40dp"
+            android:layout_marginStart="@dimen/openinghours_layout_margin_start"
+            android:layout_marginTop="@dimen/openinghours_layout_margin_top"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/address_layout">
 
@@ -51,7 +51,7 @@
             android:id="@+id/opening_hours_title"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginStart="16dp"
+            android:layout_marginStart="@dimen/openinghours_title_margin_start"
             android:text="@string/opening_hours"
             android:layout_toEndOf="@+id/opening_hours_icon" />
 
@@ -61,48 +61,48 @@
             android:layout_height="wrap_content"
             android:text="@string/monday"
             android:layout_below="@+id/opening_hours_title"
-            android:layout_marginTop="8dp"
-            android:layout_marginStart="48dp" />
+            android:layout_marginTop="@dimen/days_margin_top"
+            android:layout_marginStart="@dimen/days_margin_start" />
         <TextView
             android:id="@+id/tuesday_opening_hours_tv"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/tuesday"
             android:layout_below="@+id/monday_opening_hours_tv"
-            android:layout_marginTop="8dp"
-            android:layout_marginStart="48dp" />
+            android:layout_marginTop="@dimen/days_margin_top"
+            android:layout_marginStart="@dimen/days_margin_start" />
         <TextView
             android:id="@+id/wednesday_opening_hours_tv"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/wednesday"
             android:layout_below="@+id/tuesday_opening_hours_tv"
-            android:layout_marginTop="8dp"
-            android:layout_marginStart="48dp" />
+            android:layout_marginTop="@dimen/days_margin_top"
+            android:layout_marginStart="@dimen/days_margin_start" />
         <TextView
             android:id="@+id/thursday_opening_hours_tv"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/thursday"
             android:layout_below="@+id/wednesday_opening_hours_tv"
-            android:layout_marginTop="8dp"
-            android:layout_marginStart="48dp" />
+            android:layout_marginTop="@dimen/days_margin_top"
+            android:layout_marginStart="@dimen/days_margin_start" />
         <TextView
             android:id="@+id/friday_opening_hours_tv"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/friday"
             android:layout_below="@+id/thursday_opening_hours_tv"
-            android:layout_marginTop="8dp"
-            android:layout_marginStart="48dp" />
+            android:layout_marginTop="@dimen/days_margin_top"
+            android:layout_marginStart="@dimen/days_margin_start" />
         <TextView
             android:id="@+id/saturday_opening_hours_tv"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/saturday"
             android:layout_below="@+id/friday_opening_hours_tv"
-            android:layout_marginTop="8dp"
-            android:layout_marginStart="48dp" />
+            android:layout_marginTop="@dimen/days_margin_top"
+            android:layout_marginStart="@dimen/days_margin_start" />
         </RelativeLayout>
 
         <TextView
@@ -110,17 +110,17 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/reviews"
-            android:layout_marginStart="24dp"
-            android:layout_marginTop="16dp"
+            android:layout_marginStart="@dimen/reviews_tv_margin_start"
+            android:layout_marginTop="@dimen/reviews_tv_margin_top"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/opening_hours_layout"/>
 
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/reviews_recycler_view"
             android:layout_width="match_parent"
-            android:layout_height="200dp"
-            android:layout_marginTop="8dp"
-            android:layout_marginStart="40dp"
+            android:layout_height="@dimen/reviews_rv_height"
+            android:layout_marginTop="@dimen/reviews_rv_margin_top"
+            android:layout_marginStart="@dimen/reviews_rv_margin_start"
             android:clipToPadding="false"
             android:scrollbarStyle="outsideOverlay"
             app:layout_behavior="@string/appbar_scrolling_view_behavior"

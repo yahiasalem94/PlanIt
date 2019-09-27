@@ -31,4 +31,5 @@
     <string name="permission_rationale">Permission Rationale 1</string>
     <string name="permission_denied_explanation">Permission is denied 1</string>
     <string name="no_location_detected">Couldn\'t find location</string>
+    <string name="gps_error_message">Please Enable GPS</string>
 </resources>

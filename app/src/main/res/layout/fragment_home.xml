@@ -10,8 +10,8 @@
 
         <EditText
             android:id="@+id/simpleSearchView"
-            android:layout_width="361dp"
-            android:layout_height="39dp"
+            android:layout_width="@dimen/simplesearchview_width"
+            android:layout_height="@dimen/simplesearchview_height"
             android:layout_marginStart="@dimen/search_view_margin_start_end"
             android:layout_marginTop="@dimen/search_view_margin_top"
             android:layout_marginEnd="@dimen/search_view_margin_start_end"
@@ -25,16 +25,15 @@
 
         <LinearLayout
             android:id="@+id/departure_date_layout"
-            android:layout_width="150dp"
+            android:layout_width="@dimen/date_layout_width"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="60dp"
+            android:layout_marginLeft="@dimen/date_layout_margin_left_right"
             android:layout_marginTop="@dimen/departure_arrival_date_tv_top_margin"
             android:orientation="horizontal"
             app:layout_constraintEnd_toStartOf="@+id/arrival_date_layout"
             app:layout_constraintHorizontal_bias="@dimen/constraint_horizontal_bias"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/simpleSearchView"
-            android:onClick="departureLayoutClicked">
+            app:layout_constraintTop_toBottomOf="@+id/simpleSearchView">
 
             <TextView
                 android:id="@+id/departure_date"
@@ -44,9 +43,9 @@
 
             <ImageView
                 android:id="@+id/imageView"
-                android:layout_width="20dp"
-                android:layout_height="20dp"
-                android:layout_marginLeft="20dp"
+                android:layout_width="@dimen/calendar_iv_width"
+                android:layout_height="@dimen/calendar_iv_height"
+                android:layout_marginLeft="@dimen/calendar_iv_margin_left"
                 app:srcCompat="@drawable/calendar" />
 
 
@@ -54,11 +53,10 @@
 
         <LinearLayout
             android:id="@+id/arrival_date_layout"
-            android:layout_width="150dp"
+            android:layout_width="@dimen/date_layout_width"
             android:layout_height="wrap_content"
-            android:layout_marginStart="8dp"
             android:layout_marginTop="@dimen/departure_arrival_date_tv_top_margin"
-            android:layout_marginRight="50dp"
+            android:layout_marginRight="@dimen/date_layout_margin_left_right"
             android:orientation="horizontal"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toEndOf="@+id/departure_date_layout"
@@ -68,13 +66,13 @@
                 android:id="@+id/arrival_date"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginLeft="30dp"
+                android:layout_marginLeft="@dimen/arrival_date_margin_left"
                 android:text="@string/arrival_date" />
 
             <ImageView
                 android:id="@+id/imageView2"
-                android:layout_width="20dp"
-                android:layout_height="20dp"
+                android:layout_width="@dimen/calendar_iv_width"
+                android:layout_height="@dimen/calendar_iv_height"
                 android:layout_marginLeft="20dp"
                 app:srcCompat="@drawable/calendar" />
 
@@ -84,7 +82,7 @@
             android:id="@+id/search_button"
             android:layout_width="@dimen/search_view_and_button_width"
             android:layout_height="@dimen/search_view_and_button_height"
-            android:layout_marginTop="80dp"
+            android:layout_marginTop="@dimen/lets_go_button_margin_top"
             android:bottomLeftRadius="@dimen/button_corner_radius"
             android:bottomRightRadius="@dimen/button_corner_radius"
             android:text="@string/lets_go"

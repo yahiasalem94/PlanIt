@@ -11,18 +11,14 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.TextView;
 
 import com.example.android.planit.Constants;
 import com.example.android.planit.R;
-import com.example.android.planit.Utils.ApiInterface;
-import com.example.android.planit.Utils.NetworkUtils;
+import com.example.android.planit.utils.ApiInterface;
+import com.example.android.planit.utils.NetworkUtils;
 import com.example.android.planit.databinding.FragmentDetailsBinding;
 import com.example.android.planit.models.PlaceDetails;
 import com.example.android.planit.models.PlaceDetailsResponse;
-import com.example.android.planit.models.PointsOfInterestsResponse;
-
-import java.util.ArrayList;
 
 import retrofit2.Call;
 import retrofit2.Callback;

@@ -23,8 +23,8 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.android.planit.Constants;
 import com.example.android.planit.R;
-import com.example.android.planit.Utils.ApiInterface;
-import com.example.android.planit.Utils.NetworkUtils;
+import com.example.android.planit.utils.ApiInterface;
+import com.example.android.planit.utils.NetworkUtils;
 import com.example.android.planit.adapters.BestThingsTodoAdapter;
 import com.example.android.planit.models.PointsOfInterests;
 import com.example.android.planit.models.PointsOfInterestsResponse;
@@ -75,9 +75,7 @@ public class bestThingsTodoFragment extends Fragment implements BestThingsTodoAd
             city = getArguments().getString(HomeFragment.CITY_NAME);
         }
         apiService = NetworkUtils.getRetrofitInstance().create(ApiInterface.class);
-
         navController = Navigation.findNavController(getActivity(), R.id.nav_host_fragment);
-
         bestThingsTodoAdapter = new BestThingsTodoAdapter(this, getActivity());
     }
 
@@ -88,8 +86,9 @@ public class bestThingsTodoFragment extends Fragment implements BestThingsTodoAd
                 true) {
             @Override
             public void handleOnBackPressed() {
-                appBarLayout = ((MainActivity) getActivity()).appBarLayout;
-                appBarLayout.setExpanded(false);
+//                appBarLayout = ((MainActivity) getActivity()).appBarLayout;
+//                appBarLayout.setExpanded(false);       appBarLayout = ((MainActivity) getActivity()).appBarLayout;
+//                appBarLayout.setExpanded(false);
                 Navigation.findNavController(getActivity(), R.id.nav_host_fragment).navigateUp();
             }
         };
@@ -106,8 +105,6 @@ public class bestThingsTodoFragment extends Fragment implements BestThingsTodoAd
         mRecyclerView = mRootview.findViewById(R.id.best_things_recycler_view);
         errorTextView = mRootview.findViewById(R.id.tv_error_message_display);
         mProgressBar = mRootview.findViewById(R.id.pb_loading_indicator);
-
-
 
         setupRecyclerView();
 
@@ -152,14 +149,15 @@ public class bestThingsTodoFragment extends Fragment implements BestThingsTodoAd
             @Override
             public void onResponse(Call<PointsOfInterestsResponse> call, Response<PointsOfInterestsResponse> response) {
 
-                Log.d(TAG, response.body().getResults().get(0).getName());
-                pois = (ArrayList) response.body().getResults();
-                mProgressBar.setVisibility(View.INVISIBLE);
-                bestThingsTodoAdapter.setPoiData(pois);
+                if (response.body().getStatus() == Constants.CODE_STATUS_OK) {
+                    Log.d(TAG, response.body().getResults().get(0).getName());
+                    pois = (ArrayList) response.body().getResults();
+                    mProgressBar.setVisibility(View.INVISIBLE);
+                    bestThingsTodoAdapter.setPoiData(pois);
+                }
             }
             @Override
             public void onFailure(Call<PointsOfInterestsResponse> call, Throwable t) {
-
                 mProgressBar.setVisibility(View.INVISIBLE);
                 Log.e(TAG, t.getMessage());
                 showErrorMessage();

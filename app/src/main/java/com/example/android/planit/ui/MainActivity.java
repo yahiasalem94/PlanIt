@@ -7,8 +7,8 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.core.view.GravityCompat;
+import androidx.core.widget.NestedScrollView;
 import androidx.drawerlayout.widget.DrawerLayout;
-import androidx.fragment.app.Fragment;
 import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
 import androidx.navigation.ui.AppBarConfiguration;
@@ -30,7 +30,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     private CollapsingToolbarLayout collapsingToolbarLayout;
     public AppBarLayout appBarLayout;
     private NavController navController;
-
+    public NestedScrollView nestedScrollView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -38,9 +38,10 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         setContentView(R.layout.activity_main);
 
         toolbar = findViewById(R.id.detail_toolbar);
-        collapsingToolbarLayout = findViewById(R.id.toolbar);
+        collapsingToolbarLayout = findViewById(R.id.toolbar_layout);
         appBarLayout = findViewById(R.id.appbar);
-        appBarLayout.setExpanded(false);
+        nestedScrollView = findViewById(R.id.scrollView);
+
         setSupportActionBar(toolbar);
 
         getSupportActionBar().setHomeButtonEnabled(true);
@@ -72,14 +73,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
 
     }
-
-//    @Override
-//    public boolean onSupportNavigateUp() {
-//        if ( navController.getCurrentDestination().getId() == R.id.bestThingsTodoFragment) {
-//            appBarLayout.setExpanded(false);
-//        }
-//        return NavigationUI.navigateUp(Navigation.findNavController(this, R.id.nav_host_fragment), appBarConfiguration);
-//    }
 
 
     @Override

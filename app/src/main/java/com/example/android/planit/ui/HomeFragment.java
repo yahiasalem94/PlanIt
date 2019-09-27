@@ -16,7 +16,9 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
+import androidx.coordinatorlayout.widget.CoordinatorLayout;
 import androidx.core.content.ContextCompat;
+import androidx.core.widget.NestedScrollView;
 import androidx.databinding.DataBindingUtil;
 import androidx.fragment.app.DialogFragment;
 import androidx.fragment.app.Fragment;
@@ -56,6 +58,7 @@ public class HomeFragment extends Fragment implements View.OnClickListener, Date
     /* Views */
     private FragmentHomeBinding binding;
     private AppBarLayout appBarLayout;
+    private NestedScrollView nestedScrollView;
     private DatePickerDialog datePickerDialog;
 
     public HomeFragment() {
@@ -80,7 +83,9 @@ public class HomeFragment extends Fragment implements View.OnClickListener, Date
     public void onStart() {
         super.onStart();
         appBarLayout = ((MainActivity) getActivity()).appBarLayout;
+        nestedScrollView = ((MainActivity) getActivity()).nestedScrollView;
         appBarLayout.setExpanded(false);
+        nestedScrollView.setNestedScrollingEnabled(false);;
     }
 
     @Override
@@ -120,7 +125,7 @@ public class HomeFragment extends Fragment implements View.OnClickListener, Date
         if (!TextUtils.isEmpty(binding.simpleSearchView.getText())) {
             Bundle bundle = new Bundle();
             bundle.putString(CITY_NAME, binding.simpleSearchView.getText().toString());
-            appBarLayout.setExpanded(true);
+//            appBarLayout.setExpanded(true);
             navController.navigate(R.id.bestThingsTodoFragment, bundle);
         } else {
             Toast.makeText(getActivity(), "Please enter a City", Toast.LENGTH_SHORT).show();

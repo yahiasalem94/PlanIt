@@ -1,4 +1,4 @@
-package com.example.android.planit.Utils;
+package com.example.android.planit.utils;
 
 import com.example.android.planit.Constants;
 
