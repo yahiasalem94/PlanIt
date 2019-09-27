@@ -2,6 +2,7 @@ package com.example.android.planit.ui;
 
 
 import android.Manifest;
+import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.location.Location;
@@ -13,16 +14,28 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.activity.OnBackPressedCallback;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 import androidx.fragment.app.Fragment;
+import androidx.navigation.Navigation;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.android.planit.BuildConfig;
+import com.example.android.planit.Constants;
 import com.example.android.planit.R;
+import com.example.android.planit.adapters.NearbyAdapter;
+import com.example.android.planit.models.PointsOfInterests;
+import com.example.android.planit.models.PointsOfInterestsResponse;
+import com.example.android.planit.utils.ApiInterface;
+import com.example.android.planit.utils.NetworkUtils;
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationCallback;
 import com.google.android.gms.location.LocationRequest;
@@ -32,9 +45,16 @@ import com.google.android.gms.location.LocationSettingsRequest;
 import com.google.android.gms.location.SettingsClient;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.material.appbar.AppBarLayout;
 import com.google.android.material.snackbar.Snackbar;
 
-public class NearByFragment extends Fragment  {
+import java.util.ArrayList;
+
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
+
+public class NearByFragment extends Fragment implements NearbyAdapter.NearbyAdapterOnClickHandler {
 
     private final static String TAG = NearByFragment.class.getSimpleName();
 
@@ -42,10 +62,25 @@ public class NearByFragment extends Fragment  {
 
     private static final int REQUEST_PERMISSIONS_REQUEST_CODE = 14;
 
+    private boolean isLocationFetched = false;
     private long UPDATE_INTERVAL = 10 * 1000;  /* 10 secs */
     private long FASTEST_INTERVAL = 2000; /* 2 sec */
-    TextView txtLat;
 
+    /* View */
+    private View mRootview;
+    private ProgressBar mProgressBar;
+    private TextView errorTextView;
+    private RecyclerView mRecyclerView;
+    private AppBarLayout appBarLayout;
+
+    /* Retrofit */
+    private ApiInterface apiService;
+
+    /* data */
+    private LinearLayoutManager layoutManager;
+    private ArrayList<PointsOfInterests> pois;
+    private NearbyAdapter nearbyAdapter;
+    private String lastLocation;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -54,15 +89,57 @@ public class NearByFragment extends Fragment  {
         if (!checkPermissions()) {
             requestPermissions();
         }
+
+        apiService = NetworkUtils.getRetrofitInstance().create(ApiInterface.class);
+
+        nearbyAdapter = new NearbyAdapter(this, getActivity());
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_nearby, container, false);
+        mRootview = inflater.inflate(R.layout.fragment_nearby, container, false);
 
-        txtLat = view.findViewById(R.id.textview1);
+        ((AppCompatActivity) getActivity()).getSupportActionBar().setDisplayShowHomeEnabled(true);
+        ((AppCompatActivity) getActivity()).getSupportActionBar().setHomeButtonEnabled(true);
 
-        return view;
+        mRecyclerView = mRootview.findViewById(R.id.nearby_recycler_view);
+        errorTextView = mRootview.findViewById(R.id.tv_error_message_display);
+        mProgressBar = mRootview.findViewById(R.id.pb_loading_indicator);
+
+        setupRecyclerView();
+
+        return mRootview;
+    }
+
+    @Override
+    public void onAttach(@NonNull Context context) {
+        super.onAttach(context);
+        OnBackPressedCallback callback = new OnBackPressedCallback(
+                true) {
+            @Override
+            public void handleOnBackPressed() {
+//                appBarLayout = ((MainActivity) getActivity()).appBarLayout;
+//                appBarLayout.setExpanded(false);
+                Navigation.findNavController(getActivity(), R.id.nav_host_fragment).navigateUp();
+            }
+        };
+        requireActivity().getOnBackPressedDispatcher().addCallback(this, callback);
+    }
+
+    private void setupRecyclerView() {
+
+        layoutManager = new LinearLayoutManager(getActivity());
+        mRecyclerView.setLayoutManager(layoutManager);
+        mRecyclerView.setAdapter(nearbyAdapter);
+    }
+
+    private void showErrorMessage() {
+
+        /* First, hide the currently visible data */
+        mRecyclerView.setVisibility(View.INVISIBLE);
+        /* Then, show the error */
+        errorTextView.setText(getString(R.string.gps_error_message));
+        errorTextView.setVisibility(View.VISIBLE);
     }
 
     @Override
@@ -81,16 +158,25 @@ public class NearByFragment extends Fragment  {
                 .addOnSuccessListener(new OnSuccessListener<Location>() {
                     @Override
                     public void onSuccess(Location location) {
+                        String msg = "Updated Location: " + location.getLatitude() + "," + location.getLongitude();
+
+                        Log.d(TAG, msg);
                         // GPS location can be null if GPS is switched off
-                        if (location != null) {
-                            onLocationChanged(location);
+                        if (location != null && !isLocationFetched) {
+                            isLocationFetched = true;
+                            lastLocation = location.getLatitude()+""+"%2C"+location.getLongitude()+"";
+                            loadData(lastLocation, location.getLatitude()+"",
+                                    location.getLongitude()+"");
+                            //                            onLocationChanged(location);
+                        } else {
+                            showErrorMessage();
                         }
                     }
                 })
                 .addOnFailureListener(new OnFailureListener() {
                     @Override
                     public void onFailure(@NonNull Exception e) {
-                        Log.d("MapDemoActivity", "Error trying to get last GPS location");
+                        Log.d(TAG, "Error trying to get last GPS location");
                         e.printStackTrace();
                     }
                 });
@@ -124,7 +210,13 @@ public class NearByFragment extends Fragment  {
                     @Override
                     public void onLocationResult(LocationResult locationResult) {
                         // do work here
-                        onLocationChanged(locationResult.getLastLocation());
+                        lastLocation = locationResult.getLastLocation().getLatitude()+""+","+locationResult.getLastLocation().getLongitude()+"";
+                        if (locationResult.getLastLocation() != null && !isLocationFetched) {
+                            isLocationFetched = true;
+                            loadData(lastLocation, locationResult.getLastLocation().getLatitude() + "",
+                                    locationResult.getLastLocation().getLongitude() + "");
+//                        onLocationChanged(locationResult.getLastLocation());
+                        }
                     }
                 },
                 Looper.myLooper());
@@ -136,10 +228,38 @@ public class NearByFragment extends Fragment  {
     public void onLocationChanged(Location location) {
         // New location has now been determined
         String msg = "Updated Location: " + location.getLatitude() + "," + location.getLongitude();
-        txtLat.setText(msg);
         Toast.makeText(getActivity(), msg, Toast.LENGTH_LONG).show();
     }
 
+    @Override
+    public void onClick(View view, int position) {
+
+    }
+
+    /* Pulling data from server */
+    private void loadData(String location, String latitude, String Longitude) {
+        mProgressBar.setVisibility(View.VISIBLE);
+        Log.d(TAG, "Load data with location:"+" "+location);
+        Call<PointsOfInterestsResponse> call = apiService.getNearbyPlaces(latitude+","+Longitude, Constants.GOOGLE_RANKBY, Constants.GOOGLE_API_KEY);
+        call.enqueue(new Callback<PointsOfInterestsResponse>() {
+            @Override
+            public void onResponse(Call<PointsOfInterestsResponse> call, Response<PointsOfInterestsResponse> response) {
+
+                Log.d(TAG, response.toString());
+//                Log.d(TAG, response.body().toString());
+                pois = (ArrayList) response.body().getResults();
+                mProgressBar.setVisibility(View.INVISIBLE);
+                nearbyAdapter.setPoiData(pois);
+            }
+            @Override
+            public void onFailure(Call<PointsOfInterestsResponse> call, Throwable t) {
+
+                mProgressBar.setVisibility(View.INVISIBLE);
+                Log.e(TAG, t.getMessage());
+                showErrorMessage();
+            }
+        });
+    }
 
     /* Permissions */
     /**

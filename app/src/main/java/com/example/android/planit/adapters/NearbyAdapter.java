@@ -15,37 +15,37 @@ import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
 
-public class BestThingsTodoAdapter extends RecyclerView.Adapter<BestThingsTodoAdapterViewHolder> {
+public class NearbyAdapter extends RecyclerView.Adapter<NearbyAdapterViewHolder> {
 
     private ArrayList<PointsOfInterests> mPoiData;
-    private final BestThingsTodoAdapterOnClickHandler mClickHandler;
+    private final NearbyAdapterOnClickHandler mClickHandler;
     private Context context;
     private NavController navController;
 
-    public interface BestThingsTodoAdapterOnClickHandler {
+    public interface NearbyAdapterOnClickHandler {
         void onClick(View view, int position);
     }
 
 
-    public BestThingsTodoAdapter(BestThingsTodoAdapterOnClickHandler clickHandler, Context context) {
+    public NearbyAdapter(NearbyAdapterOnClickHandler clickHandler, Context context) {
         mClickHandler = clickHandler;
         this.context = context;
     }
 
     @Override
-    public BestThingsTodoAdapterViewHolder onCreateViewHolder(ViewGroup viewGroup, int viewType) {
+    public NearbyAdapterViewHolder onCreateViewHolder(ViewGroup viewGroup, int viewType) {
         Context context = viewGroup.getContext();
         LayoutInflater inflater = LayoutInflater.from(context);
 
         View view = inflater.inflate(R.layout.best_things_todo_row, viewGroup, false);
-        return new BestThingsTodoAdapterViewHolder(view, mClickHandler);
+        return new NearbyAdapterViewHolder(view, mClickHandler);
     }
 
     @Override
-    public void onBindViewHolder(BestThingsTodoAdapterViewHolder adapterViewHolder, int position) {
+    public void onBindViewHolder(NearbyAdapterViewHolder adapterViewHolder, int position) {
         Picasso.get()
                 .load(NetworkUtils.buildGooglePhotoUrl(/*mPoiData.get(position).getPhoto().get(0).getWidth()*/200, mPoiData.get(position).getPhoto().get(0).getPhotoReference()))
-               /* TODO Change place holder */
+                /* TODO Change place holder */
                 .placeholder(R.drawable.home_icon)
                 .into(adapterViewHolder.mPoiPhoto);
         adapterViewHolder.mNameOfPoi.setText(mPoiData.get(position).getName());
