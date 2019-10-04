@@ -19,6 +19,7 @@ public abstract class AppDatabase extends RoomDatabase {
     private static final String DATABASE_NAME = "PlanIt";
     private static AppDatabase myBucketListInstance;
     private static AppDatabase myCalendarInstance;
+    private static AppDatabase popularDestinationsInstance;
 
     public static AppDatabase getBucketListDbInstance(Context context) {
         if (myBucketListInstance == null) {
@@ -46,6 +47,20 @@ public abstract class AppDatabase extends RoomDatabase {
         return myCalendarInstance;
     }
 
+    public static AppDatabase getPopularDestinationsDbInstance(Context context) {
+        if (popularDestinationsInstance == null) {
+            synchronized (LOCK) {
+                Log.d(LOG_TAG, "Creating new database instance");
+                popularDestinationsInstance = Room.databaseBuilder(context.getApplicationContext(),
+                        AppDatabase.class, AppDatabase.DATABASE_NAME)
+                        .build();
+            }
+        }
+        Log.d(LOG_TAG, "Getting the database instance");
+        return popularDestinationsInstance;
+    }
+
     public abstract BucketListDao bucketListDao();
     public abstract MyCalendarDao myCalendarDao();
+    public abstract PopularDestinationDao popularDestinationDao();
 }

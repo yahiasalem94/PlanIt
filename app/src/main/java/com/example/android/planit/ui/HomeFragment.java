@@ -6,6 +6,7 @@ import android.app.Dialog;
 import android.content.Context;
 import android.os.Bundle;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -22,20 +23,28 @@ import androidx.core.widget.NestedScrollView;
 import androidx.databinding.DataBindingUtil;
 import androidx.fragment.app.DialogFragment;
 import androidx.fragment.app.Fragment;
+import androidx.lifecycle.LiveData;
+import androidx.lifecycle.Observer;
 import androidx.navigation.NavController;
 import androidx.navigation.NavHostController;
 import androidx.navigation.Navigation;
 import androidx.navigation.fragment.NavHostFragment;
 
 import com.example.android.planit.R;
+import com.example.android.planit.database.AppDatabase;
 import com.example.android.planit.databinding.FragmentHomeBinding;
+import com.example.android.planit.models.BucketList;
+import com.example.android.planit.models.PopularDestinations;
+import com.example.android.planit.utils.AppExecutors;
 import com.google.android.material.appbar.AppBarLayout;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.GregorianCalendar;
+import java.util.List;
 
 
 public class HomeFragment extends Fragment implements View.OnClickListener, DatePickerDialog.OnDateSetListener {
@@ -61,6 +70,8 @@ public class HomeFragment extends Fragment implements View.OnClickListener, Date
     private NestedScrollView nestedScrollView;
     private DatePickerDialog datePickerDialog;
 
+    private AppDatabase mDb;
+
     public HomeFragment() {
         // Required empty public constructor
         calendar = Calendar.getInstance();
@@ -75,8 +86,11 @@ public class HomeFragment extends Fragment implements View.OnClickListener, Date
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
+        mDb = AppDatabase.getPopularDestinationsDbInstance((getActivity()).getApplicationContext());
         datePickerDialog = new DatePickerDialog(getActivity(), this, year, month, day);
         dateFormatter = new SimpleDateFormat("dd/MM/yyyy");
+
+        populateDB();
     }
 
     @Override
@@ -161,5 +175,35 @@ public class HomeFragment extends Fragment implements View.OnClickListener, Date
                 Toast.makeText(getActivity(), "Please enter a Departure date first", Toast.LENGTH_SHORT).show();
             }
         }
+    }
+
+    private void populateDB() {
+        AppExecutors.getInstance().diskIO().execute(new Runnable() {
+            @Override
+            public void run() {
+
+                mDb.popularDestinationDao().insertAll(new PopularDestinations[] {
+                        new PopularDestinations("Paris"),
+                        new PopularDestinations("Amsterdam"),
+                        new PopularDestinations("Barcelona"),
+                        new PopularDestinations("Berlin"),
+                        new PopularDestinations("Rome")
+                });
+
+
+            }
+        });
+    }
+
+    private void retrieveTasks() {
+        Log.d(TAG, "Actively retrieving the bucketLists from the DataBase");
+        LiveData<List<PopularDestinations>> destinations = mDb.popularDestinationDao().loadAllDestinations();
+
+        destinations.observe(this, new Observer<List<PopularDestinations>>() {
+            @Override
+            public void onChanged(List<PopularDestinations> popularDestinations) {
+
+            }
+        });
     }
 }
