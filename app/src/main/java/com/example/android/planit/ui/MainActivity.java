@@ -1,5 +1,7 @@
 package com.example.android.planit.ui;
 
+import android.app.Fragment;
+import android.content.IntentFilter;
 import android.os.Bundle;
 import android.view.MenuItem;
 
@@ -9,17 +11,20 @@ import androidx.appcompat.widget.Toolbar;
 import androidx.core.view.GravityCompat;
 import androidx.core.widget.NestedScrollView;
 import androidx.drawerlayout.widget.DrawerLayout;
+import androidx.fragment.app.FragmentTransaction;
 import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
 import androidx.navigation.ui.AppBarConfiguration;
 import androidx.navigation.ui.NavigationUI;
 
 import com.example.android.planit.R;
+import com.example.android.planit.utils.ConnectionReceiver;
 import com.google.android.material.appbar.AppBarLayout;
 import com.google.android.material.appbar.CollapsingToolbarLayout;
 import com.google.android.material.navigation.NavigationView;
 
-public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
+public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener,
+        ConnectionReceiver.NetworkStateReceiverListener {
 
     private static final String TAG = MainActivity.class.getSimpleName();
 
@@ -32,12 +37,17 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     private NavController navController;
     public NestedScrollView nestedScrollView;
 
+    private ConnectionReceiver mConnectionReciever;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        toolbar = findViewById(R.id.detail_toolbar);
+        mConnectionReciever = new ConnectionReceiver();
+        mConnectionReciever.addListener(this);
+        registerReceiver(mConnectionReciever,new IntentFilter(android.net.ConnectivityManager.CONNECTIVITY_ACTION));
+
+        toolbar = findViewById(R.id.toolbar);
         collapsingToolbarLayout = findViewById(R.id.toolbar_layout);
         appBarLayout = findViewById(R.id.appbar);
         nestedScrollView = findViewById(R.id.scrollView);
@@ -51,8 +61,16 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         navigationView = findViewById(R.id.nav_view );
 
         setupNavigation();
+
+        checkConnection();
     }
 
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        mConnectionReciever.removeListener(this);
+        unregisterReceiver(mConnectionReciever);
+    }
 
     // Setting Up One Time Navigation
     private void setupNavigation() {
@@ -93,7 +111,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         menuItem.setChecked(true);
 
         int id = menuItem.getItemId();
-        appBarLayout.setExpanded(false);
 
         switch (id) {
 
@@ -116,5 +133,30 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         drawerLayout.closeDrawers();
         return true;
 
+    }
+
+    private void checkConnection() {
+
+    }
+
+    @Override
+    public void networkAvailable(boolean isAvailable) {
+        NoConnectionDialog dialogFragment = new NoConnectionDialog();
+        if(!isAvailable) {
+
+            //show a No Internet Alert or Dialog
+            dialogFragment.setCancelable(false);
+            FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
+
+            ft.addToBackStack(null);
+
+            dialogFragment.show(ft, "dialog");
+        }else{
+            Fragment prev = getFragmentManager().findFragmentByTag("dialog");
+            if (prev != null) {
+                // dismiss the dialog or refresh the activity
+                dialogFragment.dismiss();
+            }
+        }
     }
 }
