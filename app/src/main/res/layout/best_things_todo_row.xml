@@ -15,27 +15,38 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent">
 
-            <TextView
-                android:id="@+id/nameOfPoi"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:textSize="18sp"
-                android:textColor="@android:color/darker_gray"
-                android:layout_marginStart="@dimen/name_of_poi_margin_start"
-                card_view:layout_constraintStart_toStartOf="parent"
-                card_view:layout_constraintTop_toTopOf="parent"
-                tool:text = "Name of POI"/>
-
             <ImageView
                 android:id="@+id/poiPoster"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:transitionName="@string/transition_image"
-                android:layout_marginTop="@dimen/poi_poster_margin_top"
                 android:adjustViewBounds="true"
                 android:scaleType="fitXY"
-                card_view:layout_constraintTop_toBottomOf="@id/nameOfPoi"
-                tool:src="@drawable/home_icon" />
+                card_view:layout_constraintTop_toTopOf="parent"
+                card_view:layout_constraintBottom_toBottomOf="parent"
+                card_view:layout_constraintRight_toRightOf="parent"
+                card_view:layout_constraintLeft_toLeftOf="parent"
+                tool:src="@drawable/no_image" />
+
+            <LinearLayout
+                android:id="@+id/poiNameLayout"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                card_view:layout_constraintTop_toTopOf="parent"
+                card_view:layout_constraintBottom_toBottomOf="parent"
+                card_view:layout_constraintRight_toRightOf="parent"
+                card_view:layout_constraintLeft_toLeftOf="parent"
+                >
+                <TextView
+                    android:id="@+id/nameOfPoi"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textSize="18sp"
+                    android:textColor="@android:color/darker_gray"
+                    android:background="#59FFFFFF"
+                    android:layout_marginStart="@dimen/name_of_poi_margin_start"
+                    tool:text = "Name of POI"/>
+            </LinearLayout>
 
         </androidx.constraintlayout.widget.ConstraintLayout>
     </androidx.cardview.widget.CardView>

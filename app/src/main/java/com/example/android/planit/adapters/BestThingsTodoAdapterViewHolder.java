@@ -2,6 +2,7 @@ package com.example.android.planit.adapters;
 
 import android.view.View;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import androidx.navigation.NavController;
@@ -14,12 +15,14 @@ public class BestThingsTodoAdapterViewHolder extends RecyclerView.ViewHolder imp
 
         public final ImageView mPoiPhoto;
         public final TextView mNameOfPoi;
+        public final LinearLayout mNameLayout;
         private final BestThingsTodoAdapter.BestThingsTodoAdapterOnClickHandler mClickHandler;
 
         public BestThingsTodoAdapterViewHolder(View view, BestThingsTodoAdapter.BestThingsTodoAdapterOnClickHandler clickHandler) {
             super(view);
             mPoiPhoto = view.findViewById(R.id.poiPoster);
             mNameOfPoi = view.findViewById(R.id.nameOfPoi);
+            mNameLayout = view.findViewById(R.id.poiNameLayout);
             this.mClickHandler = clickHandler;
             view.setOnClickListener(this);
         }

@@ -149,7 +149,7 @@ public class bestThingsTodoFragment extends Fragment implements BestThingsTodoAd
             @Override
             public void onResponse(Call<PointsOfInterestsResponse> call, Response<PointsOfInterestsResponse> response) {
 
-                if (response.body().getStatus() == Constants.CODE_STATUS_OK) {
+                if (response.body().getStatus().equals(Constants.CODE_STATUS_OK)) {
                     Log.d(TAG, response.body().getResults().get(0).getName());
                     pois = (ArrayList) response.body().getResults();
                     mProgressBar.setVisibility(View.INVISIBLE);

@@ -11,6 +11,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.example.android.planit.R;
 import com.example.android.planit.utils.NetworkUtils;
 import com.example.android.planit.models.PointsOfInterests;
+import com.squareup.picasso.Callback;
 import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
@@ -44,12 +45,23 @@ public class BestThingsTodoAdapter extends RecyclerView.Adapter<BestThingsTodoAd
     @Override
     public void onBindViewHolder(BestThingsTodoAdapterViewHolder adapterViewHolder, int position) {
         Picasso.get()
-                .load(NetworkUtils.buildGooglePhotoUrl(/*mPoiData.get(position).getPhoto().get(0).getWidth()*/200, mPoiData.get(position).getPhoto().get(0).getPhotoReference()))
-               /* TODO Change place holder */
-                .placeholder(R.drawable.home_icon)
-                .into(adapterViewHolder.mPoiPhoto);
-        adapterViewHolder.mNameOfPoi.setText(mPoiData.get(position).getName());
-        adapterViewHolder.mPoiPhoto.setAdjustViewBounds(true);
+                .load(NetworkUtils.buildGooglePhotoUrl(mPoiData.get(position).getPhoto().get(position).getWidth(),
+                        mPoiData.get(position).getPhoto().get(position).getPhotoReference()))
+                .placeholder(R.drawable.no_image)
+                .error(R.drawable.no_image)
+                .into(adapterViewHolder.mPoiPhoto, new Callback() {
+                    @Override
+                    public void onSuccess() {
+                        adapterViewHolder.mNameOfPoi.setText(mPoiData.get(position).getName());
+                        adapterViewHolder.mPoiPhoto.setAdjustViewBounds(true);
+                    }
+
+                    @Override
+                    public void onError(Exception e) {
+                        adapterViewHolder.mNameOfPoi.setVisibility(View.INVISIBLE);
+                        adapterViewHolder.mNameLayout.setVisibility(View.INVISIBLE);
+                    }
+                });
     }
 
     @Override
