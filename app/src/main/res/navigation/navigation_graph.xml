@@ -30,6 +30,9 @@
         <action
             android:id="@+id/action_bucketListFragment_to_bucketListItemsFragment"
             app:destination="@id/bucketListItemsFragment" />
+        <action
+            android:id="@+id/action_bucketListFragment_to_createBucketListDialog"
+            app:destination="@id/createBucketListDialog" />
     </fragment>
     <fragment
         android:id="@+id/myCalendarFragment"
@@ -57,4 +60,9 @@
         android:name="com.example.android.planit.ui.NearByFragment"
         android:label="fragment_nearby"
         tools:layout="@layout/fragment_nearby" />
+    <fragment
+        android:id="@+id/createBucketListDialog"
+        android:name="com.example.android.planit.ui.CreateBucketList"
+        android:label="create_bucket_dialog"
+        tools:layout="@layout/create_bucket_dialog" />
 </navigation>

@@ -1,29 +1,23 @@
 package com.example.android.planit.models;
 
 
+import androidx.annotation.NonNull;
 import androidx.room.Entity;
+import androidx.room.Ignore;
 import androidx.room.PrimaryKey;
 
 @Entity(tableName = "bucket_list")
 public class BucketList {
 
+    @NonNull
     @PrimaryKey
-    private int id;
     private String name;
 //    private ArrayList<PointsOfInterests> activities;
 
-    public BucketList(int id, String name/*, ArrayList<PointsOfInterests> activities*/) {
-        this.id = id;
+
+    public BucketList(String name/*, ArrayList<PointsOfInterests> activities*/) {
         this.name = name;
 //        this.activities = activities;
-    }
-
-    public int getId() {
-        return id;
-    }
-
-    public void setId(int id) {
-        this.id = id;
     }
 
     public String getName() {
