@@ -9,9 +9,10 @@ import androidx.room.RoomDatabase;
 
 import com.example.android.planit.models.BucketList;
 import com.example.android.planit.models.MyCalendar;
+import com.example.android.planit.models.PopularDestinations;
 
 
-@Database(entities = {BucketList.class, MyCalendar.class}, version = 1, exportSchema = false)
+@Database(entities = {BucketList.class, MyCalendar.class, PopularDestinations.class}, version = 1, exportSchema = false)
 public abstract class AppDatabase extends RoomDatabase {
 
     private static final String LOG_TAG = AppDatabase.class.getSimpleName();

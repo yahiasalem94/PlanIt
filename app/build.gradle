@@ -44,6 +44,7 @@ dependencies {
     implementation 'com.github.prolificinteractive:material-calendarview:2.0.0'
     implementation 'com.squareup.retrofit2:retrofit:2.3.0'
     implementation 'com.squareup.retrofit2:converter-gson:2.3.0'
+    implementation 'com.squareup.okhttp3:logging-interceptor:3.11.0'
     implementation 'com.squareup.picasso:picasso:2.71828'
 
     implementation 'com.google.android.libraries.places:places:1.1.0'
@@ -60,7 +61,14 @@ dependencies {
     annotationProcessor 'androidx.lifecycle:lifecycle-compiler:2.0.0'
 
     testImplementation 'junit:junit:4.12'
+    testImplementation 'com.squareup.retrofit2:retrofit-mock:2.3.0'
+    testImplementation 'org.mockito:mockito-core:1.10.19'
+    testImplementation 'org.powermock:powermock-api-mockito:1.6.2'
+    testImplementation 'org.powermock:powermock-module-junit4-rule-agent:1.6.2'
+    testImplementation 'org.powermock:powermock-module-junit4-rule:1.6.2'
+    testImplementation 'org.powermock:powermock-module-junit4:1.6.2'
     androidTestImplementation 'androidx.test:runner:1.1.0'
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.1.0'
     implementation 'com.google.android.gms:play-services-maps:17.0.0'
+    implementation 'org.jetbrains:annotations:15.0'
 }

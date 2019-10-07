@@ -6,10 +6,12 @@ import android.app.Dialog;
 import android.content.Context;
 import android.os.Bundle;
 import android.text.TextUtils;
+import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.WindowManager;
 import android.widget.DatePicker;
 import android.widget.Toast;
 
@@ -29,8 +31,12 @@ import androidx.navigation.NavController;
 import androidx.navigation.NavHostController;
 import androidx.navigation.Navigation;
 import androidx.navigation.fragment.NavHostFragment;
+import androidx.recyclerview.widget.GridLayoutManager;
+import androidx.recyclerview.widget.LinearLayoutManager;
 
 import com.example.android.planit.R;
+import com.example.android.planit.adapters.BucketListAdapter;
+import com.example.android.planit.adapters.PopularDestinationsAdapter;
 import com.example.android.planit.database.AppDatabase;
 import com.example.android.planit.databinding.FragmentHomeBinding;
 import com.example.android.planit.models.BucketList;
@@ -47,7 +53,8 @@ import java.util.GregorianCalendar;
 import java.util.List;
 
 
-public class HomeFragment extends Fragment implements View.OnClickListener, DatePickerDialog.OnDateSetListener {
+public class HomeFragment extends Fragment implements View.OnClickListener, DatePickerDialog.OnDateSetListener,
+        PopularDestinationsAdapter.PopularDestinationsAdapterOnClickHandler {
 
     private static final String TAG = HomeFragment.class.getSimpleName();
     public static final String CITY_NAME = "city_name";
@@ -70,9 +77,14 @@ public class HomeFragment extends Fragment implements View.OnClickListener, Date
     private NestedScrollView nestedScrollView;
     private DatePickerDialog datePickerDialog;
 
+    private PopularDestinationsAdapter mAdapter;
+    private ArrayList<PopularDestinations> mPopularDestinations;
+    private GridLayoutManager gridLayoutManager;
+
     private AppDatabase mDb;
 
     public HomeFragment() {
+
         // Required empty public constructor
         calendar = Calendar.getInstance();
         year = calendar.get(Calendar.YEAR);
@@ -90,6 +102,8 @@ public class HomeFragment extends Fragment implements View.OnClickListener, Date
         datePickerDialog = new DatePickerDialog(getActivity(), this, year, month, day);
         dateFormatter = new SimpleDateFormat("dd/MM/yyyy");
 
+        mAdapter = new PopularDestinationsAdapter(this, getActivity());
+
         populateDB();
     }
 
@@ -106,9 +120,7 @@ public class HomeFragment extends Fragment implements View.OnClickListener, Date
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 
         binding = DataBindingUtil.inflate(inflater, R.layout.fragment_home, container, false);
-
         binding.searchButton.setOnClickListener(this);
-
         binding.departureDateLayout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -129,9 +141,29 @@ public class HomeFragment extends Fragment implements View.OnClickListener, Date
         navController = Navigation.findNavController(getActivity(), R.id.nav_host_fragment);
         Navigation.setViewNavController(binding.searchButton, navController);
 
+        setupRecyclerView();
+
         return binding.getRoot();
     }
 
+    private void setupRecyclerView() {
+
+        gridLayoutManager = new GridLayoutManager(getActivity().getApplicationContext(), calculateNoOfColumns(getActivity()));
+        binding.homeRecyclerView.setLayoutManager(gridLayoutManager); // set LayoutManager to RecyclerView
+        binding.homeRecyclerView.setAdapter(mAdapter);
+
+        retrieveTasks();
+    }
+
+    public static int calculateNoOfColumns(@NonNull Context context) {
+        DisplayMetrics displayMetrics = context.getResources().getDisplayMetrics();
+        float dpWidth = displayMetrics.widthPixels / displayMetrics.density;
+        int scalingFactor = 200;
+        int noOfColumns = (int) (dpWidth / scalingFactor);
+        if(noOfColumns < 2)
+            noOfColumns = 2;
+        return noOfColumns;
+    }
 
     @Override
     public void onClick(View v) {
@@ -182,15 +214,15 @@ public class HomeFragment extends Fragment implements View.OnClickListener, Date
             @Override
             public void run() {
 
-                mDb.popularDestinationDao().insertAll(new PopularDestinations[] {
-                        new PopularDestinations("Paris"),
-                        new PopularDestinations("Amsterdam"),
-                        new PopularDestinations("Barcelona"),
-                        new PopularDestinations("Berlin"),
-                        new PopularDestinations("Rome")
-                });
-
-
+                if (mDb.popularDestinationDao().numberOfRows() == 0) {
+                    mDb.popularDestinationDao().insertAll(new PopularDestinations[]{
+                            new PopularDestinations("Paris", R.drawable.paris),
+                            new PopularDestinations("Amsterdam", R.drawable.amsterdam),
+                            new PopularDestinations("Barcelona", R.drawable.barcelona),
+                            new PopularDestinations("Berlin", R.drawable.berlin),
+                            new PopularDestinations("Rome", R.drawable.rome)
+                    });
+                }
             }
         });
     }
@@ -202,8 +234,18 @@ public class HomeFragment extends Fragment implements View.OnClickListener, Date
         destinations.observe(this, new Observer<List<PopularDestinations>>() {
             @Override
             public void onChanged(List<PopularDestinations> popularDestinations) {
-
+                mPopularDestinations = (ArrayList) popularDestinations;
+                binding.homeRecyclerView.setVisibility(View.VISIBLE);
+                mAdapter.setData(mPopularDestinations);
             }
         });
+    }
+
+    @Override
+    public void onClick(int position) {
+        Bundle bundle = new Bundle();
+        bundle.putString(CITY_NAME, mPopularDestinations.get(position).getName());
+        navController.navigate(R.id.bestThingsTodoFragment, bundle);
+        Log.d(TAG, "Item Clicked");
     }
 }

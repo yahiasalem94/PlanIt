@@ -1,6 +1,7 @@
 package com.example.android.planit.database;
 
 import androidx.lifecycle.LiveData;
+import androidx.room.Dao;
 import androidx.room.Insert;
 import androidx.room.Query;
 
@@ -8,6 +9,7 @@ import com.example.android.planit.models.PopularDestinations;
 
 import java.util.List;
 
+@Dao
 public interface PopularDestinationDao {
 
     @Query("SELECT * FROM popular_destinations")
@@ -15,4 +17,7 @@ public interface PopularDestinationDao {
 
     @Insert
     void insertAll(PopularDestinations... destinations);
+
+    @Query("SELECT count(*) FROM popular_destinations")
+    int numberOfRows();
 }
