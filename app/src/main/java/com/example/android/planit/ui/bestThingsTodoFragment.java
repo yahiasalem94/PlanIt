@@ -20,6 +20,7 @@ import androidx.navigation.Navigation;
 import androidx.navigation.fragment.FragmentNavigator;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+import androidx.recyclerview.widget.StaggeredGridLayoutManager;
 
 import com.example.android.planit.Constants;
 import com.example.android.planit.R;
@@ -74,7 +75,7 @@ public class bestThingsTodoFragment extends Fragment implements BestThingsTodoAd
         if (getArguments() != null && getArguments().containsKey(HomeFragment.CITY_NAME)) {
             city = getArguments().getString(HomeFragment.CITY_NAME);
         }
-        apiService = NetworkUtils.getRetrofitInstance().create(ApiInterface.class);
+        apiService = NetworkUtils.getRetrofitInstance(getActivity()).create(ApiInterface.class);
         navController = Navigation.findNavController(getActivity(), R.id.nav_host_fragment);
         bestThingsTodoAdapter = new BestThingsTodoAdapter(this, getActivity());
     }
@@ -112,9 +113,9 @@ public class bestThingsTodoFragment extends Fragment implements BestThingsTodoAd
     }
 
     private void setupRecyclerView() {
-
-        layoutManager = new LinearLayoutManager(getActivity());
-        mRecyclerView.setLayoutManager(layoutManager);
+        // set a StaggeredGridLayoutManager with 3 number of columns and vertical orientation
+        StaggeredGridLayoutManager staggeredGridLayoutManager = new StaggeredGridLayoutManager(2, LinearLayoutManager.VERTICAL);
+        mRecyclerView.setLayoutManager(staggeredGridLayoutManager);
         mRecyclerView.setAdapter(bestThingsTodoAdapter);
     }
 
@@ -149,6 +150,11 @@ public class bestThingsTodoFragment extends Fragment implements BestThingsTodoAd
             @Override
             public void onResponse(Call<PointsOfInterestsResponse> call, Response<PointsOfInterestsResponse> response) {
 
+                if (response.raw().networkResponse() != null) {
+                    Log.d(TAG, "Network Response");
+                } else if (response.raw().cacheResponse() != null) {
+                Log.d(TAG, "Cache response");
+            }
                 if (response.body().getStatus().equals(Constants.CODE_STATUS_OK)) {
                     Log.d(TAG, response.body().getResults().get(0).getName());
                     pois = (ArrayList) response.body().getResults();

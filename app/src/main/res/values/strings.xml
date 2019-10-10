@@ -32,4 +32,6 @@
     <string name="permission_denied_explanation">Permission is denied 1</string>
     <string name="no_location_detected">Couldn\'t find location</string>
     <string name="gps_error_message">Please Enable GPS</string>
+    <string name="add_to_calendar">Add to calendar</string>
+    <string name="add_to_bucketList">Add to bucket list</string>
 </resources>
