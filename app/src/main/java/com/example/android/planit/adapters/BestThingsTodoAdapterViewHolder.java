@@ -3,6 +3,7 @@ package com.example.android.planit.adapters;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import androidx.navigation.NavController;
@@ -15,7 +16,7 @@ public class BestThingsTodoAdapterViewHolder extends RecyclerView.ViewHolder imp
 
         public final ImageView mPoiPhoto;
         public final TextView mNameOfPoi;
-        public final LinearLayout mNameLayout;
+        public final RelativeLayout mNameLayout;
         private final BestThingsTodoAdapter.BestThingsTodoAdapterOnClickHandler mClickHandler;
 
         public BestThingsTodoAdapterViewHolder(View view, BestThingsTodoAdapter.BestThingsTodoAdapterOnClickHandler clickHandler) {

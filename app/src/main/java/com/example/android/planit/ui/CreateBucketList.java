@@ -57,8 +57,6 @@ public class CreateBucketList extends Fragment {
         super.onCreate(savedInstanceState);
         mDb = AppDatabase.getBucketListDbInstance((getActivity()).getApplicationContext());
         navController = Navigation.findNavController(getActivity(), R.id.nav_host_fragment);
-        Log.d("API123", "onCreate");
-
     }
 
 

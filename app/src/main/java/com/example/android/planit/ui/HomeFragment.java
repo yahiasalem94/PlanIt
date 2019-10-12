@@ -84,11 +84,9 @@ public class HomeFragment extends Fragment implements View.OnClickListener, Date
     private AppDatabase mDb;
 
     public HomeFragment() {
-
         // Required empty public constructor
         calendar = Calendar.getInstance();
         year = calendar.get(Calendar.YEAR);
-        //Add one to month {0 - 11}
         month = calendar.get(Calendar.MONTH);
         day = calendar.get(Calendar.DAY_OF_MONTH);
     }
@@ -171,7 +169,6 @@ public class HomeFragment extends Fragment implements View.OnClickListener, Date
         if (!TextUtils.isEmpty(binding.simpleSearchView.getText())) {
             Bundle bundle = new Bundle();
             bundle.putString(CITY_NAME, binding.simpleSearchView.getText().toString());
-//            appBarLayout.setExpanded(true);
             navController.navigate(R.id.bestThingsTodoFragment, bundle);
         } else {
             Toast.makeText(getActivity(), "Please enter a City", Toast.LENGTH_SHORT).show();

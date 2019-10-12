@@ -127,5 +127,45 @@
             app:layout_constraintTop_toBottomOf="@+id/reviews_tv"
             />
 
+        <!--<com.google.android.material.floatingactionbutton.FloatingActionButton-->
+            <!--android:id="@+id/fab"-->
+            <!--android:layout_width="wrap_content"-->
+            <!--android:layout_height="wrap_content"-->
+            <!--app:layout_constraintRight_toRightOf="parent"-->
+            <!--app:layout_constraintBottom_toBottomOf="parent"-->
+            <!--android:src="@drawable/fab_plus"-->
+            <!--app:borderWidth="0dp"-->
+            <!--app:elevation="6dp"-->
+            <!--app:pressedTranslationZ="12dp"-->
+            <!--app:fabSize="normal"-->
+            <!--app:layout_anchorGravity="bottom|right|end"-->
+            <!--android:layout_margin="16dp"-->
+            <!--app:rippleColor="@color/colorPrimaryDark"/>-->
+
+        <com.leinardi.android.speeddial.SpeedDialView
+            android:id="@+id/speedDial"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="bottom|end"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"
+            android:layout_margin="16dp"
+            app:sdMainFabClosedSrc="@drawable/ic_add_white_24dp" />
+
+
+        <!--<com.google.android.material.floatingactionbutton.FloatingActionButton-->
+            <!--android:id="@+id/fabCall"-->
+            <!--android:layout_width="wrap_content"-->
+            <!--android:layout_height="wrap_content"-->
+            <!--app:layout_constraintRight_toRightOf="parent"-->
+            <!--app:layout_constraintBottom_toBottomOf="parent"-->
+            <!--android:layout_margin="10dp"-->
+            <!--android:src="@drawable/fab_plus"-->
+            <!--android:tint="@color/grey_80"-->
+            <!--app:backgroundTint="@color/grey_20"-->
+            <!--app:fabSize="mini"-->
+            <!--app:rippleColor="@color/white" />-->
+
+
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

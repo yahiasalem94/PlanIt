@@ -7,7 +7,7 @@
     <dimen name="departure_arrival_date_tv_top_margin">36dp</dimen>
     <dimen name="button_corner_radius">10dp</dimen>
     <dimen name="toolbar_height">60dp</dimen>
-    <dimen name="things_todo_card_margin">8dp</dimen>
+    <dimen name="things_todo_card_margin">1dp</dimen>
     <dimen name="name_of_poi_margin_start">16dp</dimen>
     <dimen name="poi_poster_margin_top">50dp</dimen>
     <dimen name="app_bar_height">300dp</dimen>

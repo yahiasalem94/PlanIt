@@ -7,7 +7,7 @@
     <androidx.cardview.widget.CardView
         android:id="@+id/card_view"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_height="wrap_content"
         android:layout_margin="@dimen/things_todo_card_margin"
         android:layout_gravity="center">
 
@@ -28,25 +28,25 @@
                 card_view:layout_constraintLeft_toLeftOf="parent"
                 tool:src="@drawable/no_image" />
 
-            <LinearLayout
+            <RelativeLayout
                 android:id="@+id/poiNameLayout"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:layout_width="150dp"
+                android:layout_height="40dp"
+                android:background="#CCFFFFFF"
                 card_view:layout_constraintTop_toTopOf="parent"
                 card_view:layout_constraintBottom_toBottomOf="parent"
                 card_view:layout_constraintRight_toRightOf="parent"
-                card_view:layout_constraintLeft_toLeftOf="parent"
-                >
+                card_view:layout_constraintLeft_toLeftOf="parent">
+
                 <TextView
                     android:id="@+id/nameOfPoi"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:textSize="18sp"
-                    android:textColor="@android:color/darker_gray"
-                    android:background="#59FFFFFF"
-                    android:layout_marginStart="@dimen/name_of_poi_margin_start"
-                    tool:text = "Name of POI"/>
-            </LinearLayout>
+                    android:textStyle="bold"
+                    android:gravity="center"
+                    android:layout_centerInParent="true"
+                    tool:text = "Name of POI" />
+            </RelativeLayout>
 
         </androidx.constraintlayout.widget.ConstraintLayout>
     </androidx.cardview.widget.CardView>
