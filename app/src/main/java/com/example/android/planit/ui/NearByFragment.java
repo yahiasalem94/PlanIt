@@ -90,7 +90,7 @@ public class NearByFragment extends Fragment implements NearbyAdapter.NearbyAdap
             requestPermissions();
         }
 
-        apiService = NetworkUtils.getRetrofitInstance().create(ApiInterface.class);
+        apiService = NetworkUtils.getRetrofitInstance(getActivity()).create(ApiInterface.class);
 
         nearbyAdapter = new NearbyAdapter(this, getActivity());
     }
