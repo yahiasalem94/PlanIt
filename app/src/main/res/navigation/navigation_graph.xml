@@ -41,7 +41,6 @@
     <fragment
         android:id="@+id/bucketListItemsFragment"
         android:name="com.example.android.planit.ui.BucketListItemsFragment"
-        android:label="fragment_bucket_list_items"
         tools:layout="@layout/fragment_bucket_list_items" />
     <fragment
         android:id="@+id/bestThingsTodoFragment"
@@ -58,11 +57,14 @@
     <fragment
         android:id="@+id/nearByFragment"
         android:name="com.example.android.planit.ui.NearByFragment"
-        android:label="fragment_nearby"
         tools:layout="@layout/fragment_nearby" />
     <fragment
         android:id="@+id/createBucketListDialog"
         android:name="com.example.android.planit.ui.CreateBucketList"
-        android:label="create_bucket_dialog"
         tools:layout="@layout/create_bucket_dialog" />
+    <fragment
+        android:id="@+id/noConnectionDialog"
+        android:name="com.example.android.planit.ui.NoConnectionDialog"
+        android:label="dialog_no_connection"
+        tools:layout="@layout/dialog_no_connection" />
 </navigation>

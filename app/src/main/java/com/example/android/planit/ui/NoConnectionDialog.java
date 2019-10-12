@@ -15,19 +15,13 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
 import androidx.fragment.app.DialogFragment;
+import androidx.fragment.app.Fragment;
 
 import com.example.android.planit.R;
 
 
-public class NoConnectionDialog extends DialogFragment {
+public class NoConnectionDialog extends Fragment {
 
-    @NonNull
-    @Override
-    public Dialog onCreateDialog(@Nullable Bundle savedInstanceState) {
-
-        return super.onCreateDialog(savedInstanceState);
-
-    }
 
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
@@ -57,10 +51,6 @@ public class NoConnectionDialog extends DialogFragment {
     @Override
     public void onDestroyView() {
         super.onDestroyView();
-    }
-
-    public interface DialogListener {
-        void onFinishEditDialog(String inputText);
     }
 
 

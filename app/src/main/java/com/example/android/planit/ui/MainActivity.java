@@ -4,6 +4,7 @@ import android.app.Fragment;
 import android.content.IntentFilter;
 import android.os.Bundle;
 import android.view.MenuItem;
+import android.view.WindowManager;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
@@ -17,8 +18,10 @@ import androidx.navigation.Navigation;
 import androidx.navigation.ui.AppBarConfiguration;
 import androidx.navigation.ui.NavigationUI;
 
+import com.example.android.planit.Constants;
 import com.example.android.planit.R;
 import com.example.android.planit.utils.ConnectionReceiver;
+import com.google.android.libraries.places.api.Places;
 import com.google.android.material.appbar.AppBarLayout;
 import com.google.android.material.appbar.CollapsingToolbarLayout;
 import com.google.android.material.navigation.NavigationView;
@@ -42,6 +45,8 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        this.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
 
         mConnectionReciever = new ConnectionReceiver();
         mConnectionReciever.addListener(this);
@@ -79,11 +84,9 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
          appBarConfiguration = new AppBarConfiguration.Builder(
                  R.id.homeFragment, R.id.bucketListFragment,
-                 R.id.myCalendarFragment).setDrawerLayout(drawerLayout).build();
+                 R.id.myCalendarFragment, R.id.bestThingsTodoFragment).setDrawerLayout(drawerLayout).build();
 
-
-//        NavigationUI.setupActionBarWithNavController(this, navController, appBarConfiguration);
-        NavigationUI.setupWithNavController(collapsingToolbarLayout, toolbar, navController, appBarConfiguration);
+         NavigationUI.setupWithNavController(collapsingToolbarLayout, toolbar, navController, appBarConfiguration);
 
         navigationView.setNavigationItemSelectedListener(this);
 
@@ -144,18 +147,19 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         NoConnectionDialog dialogFragment = new NoConnectionDialog();
         if(!isAvailable) {
 
+            navController.navigate(R.id.noConnectionDialog);
             //show a No Internet Alert or Dialog
-            dialogFragment.setCancelable(false);
-            FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
-
-            ft.addToBackStack(null);
-
-            dialogFragment.show(ft, "dialog");
+//            dialogFragment.setCancelable(false);
+//            FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
+//
+//            ft.addToBackStack(null);
+//
+//            dialogFragment.show(ft, "dialog");
         }else{
             Fragment prev = getFragmentManager().findFragmentByTag("dialog");
             if (prev != null) {
                 // dismiss the dialog or refresh the activity
-                dialogFragment.dismiss();
+                navController.navigate(R.id.homeFragment);
             }
         }
     }
