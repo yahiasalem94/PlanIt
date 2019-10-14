@@ -4,21 +4,27 @@ package com.example.android.planit.ui;
 import android.app.DatePickerDialog;
 import android.content.DialogInterface;
 import android.graphics.Color;
+import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.ViewTreeObserver;
 import android.widget.DatePicker;
+import android.widget.ImageView;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
 import androidx.core.content.res.ResourcesCompat;
+import androidx.core.widget.NestedScrollView;
 import androidx.databinding.DataBindingUtil;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.Observer;
+import androidx.transition.TransitionInflater;
 
 import com.example.android.planit.Constants;
 import com.example.android.planit.R;
@@ -34,8 +40,10 @@ import com.example.android.planit.utils.ApiInterface;
 import com.example.android.planit.utils.AppExecutors;
 import com.example.android.planit.utils.NetworkUtils;
 import com.google.android.gms.maps.model.PointOfInterest;
+import com.google.android.material.appbar.AppBarLayout;
 import com.leinardi.android.speeddial.SpeedDialActionItem;
 import com.leinardi.android.speeddial.SpeedDialView;
+import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -62,6 +70,8 @@ public class DetailsFragment extends Fragment implements DatePickerDialog.OnDate
     private String placeId;
     private String poi_name;
     private PlaceDetails placeDetails;
+    private String photoRef;
+    private int photoWidth;
 
     private ArrayList<BucketList> mBucketLists;
     private ArrayList<String> mBucketListsName;
@@ -74,7 +84,9 @@ public class DetailsFragment extends Fragment implements DatePickerDialog.OnDate
 
     /* Views */
     private FragmentDetailsBinding binding;
-
+    private NestedScrollView nestedScrollView;
+    private AppBarLayout appBarLayout;
+    private ImageView header;
 
     public DetailsFragment() {
         // Required empty public constructor
@@ -91,24 +103,41 @@ public class DetailsFragment extends Fragment implements DatePickerDialog.OnDate
 
         if (getArguments() != null && getArguments().containsKey(HomeFragment.CITY_NAME)
                 && getArguments().containsKey(bestThingsTodoFragment.PLACE_ID)
-                && getArguments().containsKey(bestThingsTodoFragment.POI_NAME)) {
+                && getArguments().containsKey(bestThingsTodoFragment.POI_NAME)
+                && getArguments().containsKey(bestThingsTodoFragment.PHOTO_REF)
+                && getArguments().containsKey(bestThingsTodoFragment.PHOTO_WIDTH)) {
 
             city = getArguments().getString(HomeFragment.CITY_NAME);
             placeId = getArguments().getString(bestThingsTodoFragment.PLACE_ID);
             poi_name = getArguments().getString(bestThingsTodoFragment.POI_NAME);
+            photoRef = getArguments().getString(bestThingsTodoFragment.PHOTO_REF);
+            photoWidth = getArguments().getInt(bestThingsTodoFragment.PHOTO_WIDTH);
         }
 
         apiService = NetworkUtils.getRetrofitInstance(getActivity()).create(ApiInterface.class);
         mDb = AppDatabase.getMyCalendarDbInstance((getActivity()).getApplicationContext());
         datePickerDialog = new DatePickerDialog(getActivity(), this, year, month, day);
 
+        setSharedElementEnterTransition(TransitionInflater.from(getContext()).inflateTransition(android.R.transition.move));
+        postponeEnterTransition();
 //        retrieveBucketLists();
+    }
+
+    @Override
+    public void onStart() {
+        super.onStart();
+        nestedScrollView = ((MainActivity) getActivity()).nestedScrollView;
+        nestedScrollView.setNestedScrollingEnabled(true);
+        appBarLayout = ((MainActivity) getActivity()).appBarLayout;
+        appBarLayout.setExpanded(true);
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         binding = DataBindingUtil.inflate(inflater, R.layout.fragment_details, container, false);
+
+        header = ((MainActivity) getActivity()).imageView;
 
         binding.speedDial.addActionItem(
                 new SpeedDialActionItem.Builder(R.id.AddToCalendar, R.drawable.calendar_icon_fab)
@@ -151,6 +180,27 @@ public class DetailsFragment extends Fragment implements DatePickerDialog.OnDate
         return binding.getRoot();
     }
 
+    @Override
+    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+
+        Picasso.get()
+                .load(NetworkUtils.buildGooglePhotoUrl(photoWidth, photoRef))
+                .placeholder(R.drawable.no_image)
+                .error(R.drawable.no_image)
+                .into(header, new com.squareup.picasso.Callback() {
+                    @Override
+                    public void onSuccess() {
+                        scheduleStartPostponedTransition(header);
+                    }
+
+                    @Override
+                    public void onError(Exception e) {
+                        startPostponedEnterTransition();
+                    }
+                });
+    }
+
     private void loadDetails() {
         //        showDataView();
 //        mProgressBar.setVisibility(View.VISIBLE);
@@ -172,6 +222,18 @@ public class DetailsFragment extends Fragment implements DatePickerDialog.OnDate
 //                showErrorMessage();
             }
         });
+    }
+
+    private void scheduleStartPostponedTransition(final View sharedElement) {
+        sharedElement.getViewTreeObserver().addOnPreDrawListener(
+                new ViewTreeObserver.OnPreDrawListener() {
+                    @Override
+                    public boolean onPreDraw() {
+                        sharedElement.getViewTreeObserver().removeOnPreDrawListener(this);
+                        startPostponedEnterTransition();
+                        return true;
+                    }
+                });
     }
 
     private void setupUI() {

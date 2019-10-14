@@ -111,7 +111,7 @@ public class HomeFragment extends Fragment implements View.OnClickListener, Date
         appBarLayout = ((MainActivity) getActivity()).appBarLayout;
         nestedScrollView = ((MainActivity) getActivity()).nestedScrollView;
         appBarLayout.setExpanded(false);
-        nestedScrollView.setNestedScrollingEnabled(false);;
+        nestedScrollView.setNestedScrollingEnabled(false);
     }
 
     @Override

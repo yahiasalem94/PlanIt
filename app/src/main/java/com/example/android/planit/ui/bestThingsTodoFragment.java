@@ -7,6 +7,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
@@ -14,6 +15,7 @@ import androidx.activity.OnBackPressedCallback;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.widget.NestedScrollView;
 import androidx.fragment.app.Fragment;
 import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
@@ -41,6 +43,9 @@ public class bestThingsTodoFragment extends Fragment implements BestThingsTodoAd
 
     private static final String TAG = bestThingsTodoFragment.class.getSimpleName();
     public static final String PLACE_ID = "place_id";
+    public static final String POI_NAME = "poi_name";
+    public static final String PHOTO_REF = "photo_ref";
+    public static final String PHOTO_WIDTH = "photo_width";
 
     private String city;
 
@@ -52,6 +57,7 @@ public class bestThingsTodoFragment extends Fragment implements BestThingsTodoAd
     private TextView errorTextView;
     private RecyclerView mRecyclerView;
     private AppBarLayout appBarLayout;
+    private NestedScrollView nestedScrollView;
 
     /* Retrofit */
     private ApiInterface apiService;
@@ -87,9 +93,6 @@ public class bestThingsTodoFragment extends Fragment implements BestThingsTodoAd
                 true) {
             @Override
             public void handleOnBackPressed() {
-//                appBarLayout = ((MainActivity) getActivity()).appBarLayout;
-//                appBarLayout.setExpanded(false);       appBarLayout = ((MainActivity) getActivity()).appBarLayout;
-//                appBarLayout.setExpanded(false);
                 Navigation.findNavController(getActivity(), R.id.nav_host_fragment).navigateUp();
             }
         };
@@ -117,6 +120,17 @@ public class bestThingsTodoFragment extends Fragment implements BestThingsTodoAd
         StaggeredGridLayoutManager staggeredGridLayoutManager = new StaggeredGridLayoutManager(2, LinearLayoutManager.VERTICAL);
         mRecyclerView.setLayoutManager(staggeredGridLayoutManager);
         mRecyclerView.setAdapter(bestThingsTodoAdapter);
+    }
+
+    @Override
+    public void onStart() {
+        super.onStart();
+
+        nestedScrollView = ((MainActivity) getActivity()).nestedScrollView;
+        nestedScrollView.setNestedScrollingEnabled(false);
+        appBarLayout = ((MainActivity) getActivity()).appBarLayout;
+        appBarLayout.setExpanded(false);
+
     }
 
     @Override
@@ -176,6 +190,10 @@ public class bestThingsTodoFragment extends Fragment implements BestThingsTodoAd
         Bundle bundle = new Bundle();
         bundle.putString(HomeFragment.CITY_NAME, city);
         bundle.putString(PLACE_ID, pois.get(position).getPlaceId());
+        bundle.putString(POI_NAME, pois.get(position).getName());
+        bundle.putString(PHOTO_REF, pois.get(position).getPhoto().get(0).getPhotoReference());
+        bundle.putInt(PHOTO_WIDTH, pois.get(position).getPhoto().get(0).getWidth());
+
 
         FragmentNavigator.Extras extras = new FragmentNavigator.Extras.Builder()
                 .addSharedElement(view, String.valueOf(R.string.transition_image)).build();

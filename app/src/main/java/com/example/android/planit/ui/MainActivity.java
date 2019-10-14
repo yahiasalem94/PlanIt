@@ -5,6 +5,7 @@ import android.content.IntentFilter;
 import android.os.Bundle;
 import android.view.MenuItem;
 import android.view.WindowManager;
+import android.widget.ImageView;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
@@ -39,6 +40,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     public AppBarLayout appBarLayout;
     private NavController navController;
     public NestedScrollView nestedScrollView;
+    public ImageView imageView;
 
     private ConnectionReceiver mConnectionReciever;
     @Override
@@ -56,18 +58,15 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         collapsingToolbarLayout = findViewById(R.id.toolbar_layout);
         appBarLayout = findViewById(R.id.appbar);
         nestedScrollView = findViewById(R.id.scrollView);
+        imageView = findViewById(R.id.header);
 
         setSupportActionBar(toolbar);
-
         getSupportActionBar().setHomeButtonEnabled(true);
-
 
         drawerLayout = findViewById(R.id.drawer_layout);
         navigationView = findViewById(R.id.nav_view );
 
         setupNavigation();
-
-        checkConnection();
     }
 
     @Override
@@ -87,19 +86,13 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                  R.id.myCalendarFragment, R.id.bestThingsTodoFragment).setDrawerLayout(drawerLayout).build();
 
          NavigationUI.setupWithNavController(collapsingToolbarLayout, toolbar, navController, appBarConfiguration);
-
-        navigationView.setNavigationItemSelectedListener(this);
-
-        navigationView.getMenu().getItem(0).setChecked(true);
-
-
+         navigationView.setNavigationItemSelectedListener(this);
+         navigationView.getMenu().getItem(0).setChecked(true);
     }
 
 
     @Override
     public void onBackPressed() {
-
-
         if (drawerLayout.isDrawerOpen(GravityCompat.START)) {
             drawerLayout.closeDrawer(GravityCompat.START);
         } else {
@@ -112,7 +105,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     public boolean onNavigationItemSelected(@NonNull MenuItem menuItem) {
 
         menuItem.setChecked(true);
-
         int id = menuItem.getItemId();
 
         switch (id) {
@@ -138,23 +130,11 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
     }
 
-    private void checkConnection() {
-
-    }
-
     @Override
     public void networkAvailable(boolean isAvailable) {
-        NoConnectionDialog dialogFragment = new NoConnectionDialog();
         if(!isAvailable) {
-
+            getSupportActionBar().setHomeButtonEnabled(false);
             navController.navigate(R.id.noConnectionDialog);
-            //show a No Internet Alert or Dialog
-//            dialogFragment.setCancelable(false);
-//            FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
-//
-//            ft.addToBackStack(null);
-//
-//            dialogFragment.show(ft, "dialog");
         }else{
             Fragment prev = getFragmentManager().findFragmentByTag("dialog");
             if (prev != null) {
