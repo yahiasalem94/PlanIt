@@ -12,8 +12,9 @@ import java.util.Date;
 
 @Entity(tableName = "my_calendar")
 public class MyCalendar {
-    @PrimaryKey
-    @NonNull
+    @PrimaryKey(autoGenerate = true)
+    private int uniqueId;
+
     private int year;
     private int month;
     private int day;
@@ -58,4 +59,13 @@ public class MyCalendar {
     public void setName(String name) {
         this.name = name;
     }
+
+    public int getUniqueId() {
+        return uniqueId;
+    }
+
+    public void setUniqueId(int uniqueId) {
+        this.uniqueId = uniqueId;
+    }
+
 }
