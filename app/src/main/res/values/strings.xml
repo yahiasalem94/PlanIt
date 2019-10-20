@@ -34,4 +34,7 @@
     <string name="gps_error_message">Please Enable GPS</string>
     <string name="add_to_calendar">Add to calendar</string>
     <string name="add_to_bucketList">Add to bucket list</string>
+    <string name="sunday">Sunday</string>
+    <string name="open_now">Open Now</string>
+    <string name="open">Open</string>
 </resources>

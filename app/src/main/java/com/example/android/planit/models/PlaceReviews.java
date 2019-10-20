@@ -6,13 +6,17 @@ public class PlaceReviews {
 
     @SerializedName("author_name")
     private String authorName;
-    private int rating;
+    @SerializedName("author_url")
+    private String authorUrl;
+    private float rating;
     @SerializedName("relative_time_description")
     private String time;
     @SerializedName("text")
     private String review;
+    @SerializedName("profile_photo_url")
+    private String profilePhoto;
 
-    public PlaceReviews(String authorName, int rating, String time, String review) {
+    public PlaceReviews(String authorName, float rating, String time, String review) {
         this.authorName = authorName;
         this.rating = rating;
         this.time = time;
@@ -27,11 +31,19 @@ public class PlaceReviews {
         this.authorName = authorName;
     }
 
-    public int getRating() {
+    public String getAuthorUrl() {
+        return authorUrl;
+    }
+
+    public void setAuthorUrl(String authorUrl) {
+        this.authorUrl = authorUrl;
+    }
+
+    public float getRating() {
         return rating;
     }
 
-    public void setRating(int rating) {
+    public void setRating(float rating) {
         this.rating = rating;
     }
 
@@ -49,5 +61,13 @@ public class PlaceReviews {
 
     public void setReview(String review) {
         this.review = review;
+    }
+
+    public String getProfilePhoto() {
+        return profilePhoto;
+    }
+
+    public void setProfilePhoto(String profilePhoto) {
+        this.profilePhoto = profilePhoto;
     }
 }

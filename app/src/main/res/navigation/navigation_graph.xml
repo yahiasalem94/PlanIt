@@ -3,7 +3,6 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/navigation_graph.xml"
-    android:label="@string/app_name"
     app:startDestination="@id/homeFragment">
 
     <fragment
@@ -80,6 +79,7 @@
     </fragment>
     <fragment
         android:id="@+id/detailsFragment"
+        android:label=" "
         android:name="com.example.android.planit.ui.DetailsFragment"
         tools:layout="@layout/fragment_details"
         app:enterAnim="@anim/slide_in_right"

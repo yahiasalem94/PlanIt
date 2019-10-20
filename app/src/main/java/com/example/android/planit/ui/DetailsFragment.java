@@ -2,9 +2,11 @@ package com.example.android.planit.ui;
 
 
 import android.app.DatePickerDialog;
+import android.content.Context;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.graphics.Color;
-import android.os.Build;
+import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -15,6 +17,7 @@ import android.widget.DatePicker;
 import android.widget.ImageView;
 import android.widget.Toast;
 
+import androidx.activity.OnBackPressedCallback;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
@@ -24,10 +27,16 @@ import androidx.databinding.DataBindingUtil;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.Observer;
+import androidx.navigation.Navigation;
+import androidx.recyclerview.widget.GridLayoutManager;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 import androidx.transition.TransitionInflater;
 
 import com.example.android.planit.Constants;
 import com.example.android.planit.R;
+import com.example.android.planit.adapters.PopularDestinationsAdapter;
+import com.example.android.planit.adapters.ReviewsAdapter;
 import com.example.android.planit.database.AppDatabase;
 import com.example.android.planit.databinding.FragmentDetailsBinding;
 import com.example.android.planit.models.BucketList;
@@ -39,7 +48,6 @@ import com.example.android.planit.models.PointsOfInterests;
 import com.example.android.planit.utils.ApiInterface;
 import com.example.android.planit.utils.AppExecutors;
 import com.example.android.planit.utils.NetworkUtils;
-import com.google.android.gms.maps.model.PointOfInterest;
 import com.google.android.material.appbar.AppBarLayout;
 import com.leinardi.android.speeddial.SpeedDialActionItem;
 import com.leinardi.android.speeddial.SpeedDialView;
@@ -56,7 +64,8 @@ import retrofit2.Response;
 /**
  * A simple {@link Fragment} subclass.
  */
-public class DetailsFragment extends Fragment implements DatePickerDialog.OnDateSetListener {
+public class DetailsFragment extends Fragment implements DatePickerDialog.OnDateSetListener,
+        ReviewsAdapter.ReviewsAdapterOnClickHandler {
 
     private static final String TAG = DetailsFragment.class.getSimpleName();
 
@@ -76,6 +85,9 @@ public class DetailsFragment extends Fragment implements DatePickerDialog.OnDate
     private ArrayList<BucketList> mBucketLists;
     private ArrayList<String> mBucketListsName;
 
+    private ReviewsAdapter mAdapter;
+    private LinearLayoutManager linearLayoutManager;
+
     /* Retrofit */
     private ApiInterface apiService;
 
@@ -87,6 +99,7 @@ public class DetailsFragment extends Fragment implements DatePickerDialog.OnDate
     private NestedScrollView nestedScrollView;
     private AppBarLayout appBarLayout;
     private ImageView header;
+    private RecyclerView recyclerView;
 
     public DetailsFragment() {
         // Required empty public constructor
@@ -100,6 +113,9 @@ public class DetailsFragment extends Fragment implements DatePickerDialog.OnDate
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        mBucketLists = new ArrayList<>();
+        mBucketListsName = new ArrayList<>();
 
         if (getArguments() != null && getArguments().containsKey(HomeFragment.CITY_NAME)
                 && getArguments().containsKey(bestThingsTodoFragment.PLACE_ID)
@@ -118,9 +134,10 @@ public class DetailsFragment extends Fragment implements DatePickerDialog.OnDate
         mDb = AppDatabase.getMyCalendarDbInstance((getActivity()).getApplicationContext());
         datePickerDialog = new DatePickerDialog(getActivity(), this, year, month, day);
 
+        mAdapter = new ReviewsAdapter(this, getActivity());
+
         setSharedElementEnterTransition(TransitionInflater.from(getContext()).inflateTransition(android.R.transition.move));
         postponeEnterTransition();
-//        retrieveBucketLists();
     }
 
     @Override
@@ -133,11 +150,43 @@ public class DetailsFragment extends Fragment implements DatePickerDialog.OnDate
     }
 
     @Override
+    public void onAttach(@NonNull Context context) {
+        super.onAttach(context);
+        OnBackPressedCallback callback = new OnBackPressedCallback(true) {
+
+            @Override
+            public void handleOnBackPressed() {
+                Navigation.findNavController(getActivity(), R.id.nav_host_fragment).navigateUp();
+            }
+        };
+        requireActivity().getOnBackPressedDispatcher().addCallback(this, callback);
+    }
+
+    @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         binding = DataBindingUtil.inflate(inflater, R.layout.fragment_details, container, false);
 
         header = ((MainActivity) getActivity()).imageView;
+
+        binding.addressLayout.setClickable(false);
+        binding.addressLayout.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(android.content.Intent.ACTION_VIEW,
+                        Uri.parse("google.navigation:q="+placeDetails.getAddress()));
+            }
+        });
+
+        binding.phoneLayout.setClickable(false);
+        binding.phoneLayout.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent callIntent = new Intent(Intent.ACTION_CALL);
+                callIntent.setData(Uri.parse("tel:"+placeDetails.getPhoneNumber()));
+                startActivity(callIntent);
+            }
+        });
 
         binding.speedDial.addActionItem(
                 new SpeedDialActionItem.Builder(R.id.AddToCalendar, R.drawable.calendar_icon_fab)
@@ -169,7 +218,7 @@ public class DetailsFragment extends Fragment implements DatePickerDialog.OnDate
                         return false; // true to keep the Speed Dial open
                     case R.id.AddToBucketList:
                         Log.d(TAG, "Add to bucket list");
-//                        chooseBucketListDialog();
+                        chooseBucketListDialog();
                         return false;
                     default:
                         return false;
@@ -177,6 +226,7 @@ public class DetailsFragment extends Fragment implements DatePickerDialog.OnDate
             }
         });
 
+        setupRecyclerView();
         return binding.getRoot();
     }
 
@@ -199,6 +249,9 @@ public class DetailsFragment extends Fragment implements DatePickerDialog.OnDate
                         startPostponedEnterTransition();
                     }
                 });
+
+        retrieveBucketLists();
+        loadDetails();
     }
 
     private void loadDetails() {
@@ -236,80 +289,120 @@ public class DetailsFragment extends Fragment implements DatePickerDialog.OnDate
                 });
     }
 
-    private void setupUI() {
+    private void setupRecyclerView() {
 
+        linearLayoutManager = new LinearLayoutManager(getActivity().getApplicationContext());
+        binding.reviewsRecyclerView.setLayoutManager(linearLayoutManager); // set LayoutManager to RecyclerView
+        binding.reviewsRecyclerView.setAdapter(mAdapter);
     }
 
-//    private void retrieveBucketLists() {
-//        Log.d(TAG, "Actively retrieving the bucketLists from the DataBase");
-//        LiveData<List<BucketList>> bucketLists = mDb.bucketListDao().loadAllBucketLists();
-//
-//        bucketLists.observe(this, new Observer<List<BucketList>>() {
-//            @Override
-//            public void onChanged(@Nullable List<BucketList> bucketLists) {
-//                Log.d(TAG, "Receiving database update from LiveData");
-//                if (bucketLists.size() > 0) {
-//                    mBucketLists = (ArrayList) bucketLists;
-//                    for (int i = 0; i<mBucketLists.size(); i++) {
-//                        mBucketListsName.add(mBucketLists.get(i).getName());
-//                    }
-//                }
-//            }
-//        });
-//    }
+    private void setupUI() {
 
-//    private void chooseBucketListDialog() {
-//
-//        if (mBucketLists.size() <= 0){
-//            Toast.makeText(getActivity(), "No BucketLists Created", Toast.LENGTH_SHORT).show();
-//            return;
-//        }
-//        // setup the alert builder
-//        AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
-//        builder.setTitle("Choose a BucketList");
-//
-//        // add a list
-//        String[] array = mBucketListsName.toArray(new String[mBucketListsName.size()]);
-//        builder.setItems(array, new DialogInterface.OnClickListener() {
-//            @Override
-//            public void onClick(DialogInterface dialog, int which) {
-//                addItemToBucketList(which);
-//            }
-//        });
-//
-//// create and show the alert dialog
-//        AlertDialog dialog = builder.create();
-//        dialog.show();
-//    }
+        binding.poiName.setText(placeDetails.getName());
+
+        if (placeDetails.getOpeningHours().getOpenNow()) {
+            binding.openNowValue.setText(getActivity().getString(R.string.open));
+        }
+
+        String rating = String.format ("%.1f", placeDetails.getRating());
+        binding.ratingValue.setText(rating);
+        binding.ratingBar.setRating(placeDetails.getRating());
+
+        binding.address.setText(placeDetails.getAddress());
+        binding.addressLayout.setClickable(true);
+
+        binding.phone.setText(placeDetails.getPhoneNumber());
+        binding.phoneLayout.setClickable(true);
+
+        binding.mondayOpeningHoursTv.setText(placeDetails.getOpeningHours().getWeekdayHours().get(0));
+        binding.tuesdayOpeningHoursTv.setText(placeDetails.getOpeningHours().getWeekdayHours().get(1));
+        binding.wednesdayOpeningHoursTv.setText(placeDetails.getOpeningHours().getWeekdayHours().get(2));
+        binding.thursdayOpeningHoursTv.setText(placeDetails.getOpeningHours().getWeekdayHours().get(3));
+        binding.fridayOpeningHoursTv.setText(placeDetails.getOpeningHours().getWeekdayHours().get(4));
+        binding.saturdayOpeningHoursTv.setText(placeDetails.getOpeningHours().getWeekdayHours().get(5));
+        binding.sundayOpeningHoursTv.setText(placeDetails.getOpeningHours().getWeekdayHours().get(6));
+
+        mAdapter.setData(placeDetails.getPlaceReviews());
+    }
+
+    private void retrieveBucketLists() {
+        Log.d(TAG, "Actively retrieving the bucketLists from the DataBase");
+        LiveData<List<BucketList>> bucketLists = mDb.bucketListDao().loadAllBucketLists();
+
+        bucketLists.observe(this, new Observer<List<BucketList>>() {
+            @Override
+            public void onChanged(@Nullable List<BucketList> bucketLists) {
+                Log.d(TAG, "Receiving database update from LiveData");
+                if (bucketLists.size() > 0) {
+                    mBucketLists = (ArrayList) bucketLists;
+                    for (int i = 0; i<mBucketLists.size(); i++) {
+                        mBucketListsName.add(mBucketLists.get(i).getName());
+                    }
+                }
+            }
+        });
+    }
+
+    private void chooseBucketListDialog() {
+
+        if (mBucketLists.size() <= 0){
+            Toast.makeText(getActivity(), "No BucketLists Created", Toast.LENGTH_SHORT).show();
+            return;
+        }
+        // setup the alert builder
+        AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+        builder.setTitle("Choose a BucketList");
+
+        // add a list
+        String[] array = mBucketListsName.toArray(new String[mBucketListsName.size()]);
+        builder.setItems(array, new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                addItemToBucketList(which);
+            }
+        });
+
+        // create and show the alert dialog
+        AlertDialog dialog = builder.create();
+        dialog.show();
+    }
     private void addToCalendar(int year, int month, int dayOfMonth) {
         AppExecutors.getInstance().diskIO().execute(new Runnable() {
             @Override
             public void run() {
-                MyCalendar calendar = new MyCalendar(year, month, dayOfMonth, city);
+                MyCalendar calendar = new MyCalendar(year, month, dayOfMonth, poi_name);
                 mDb.myCalendarDao().insertCalendarEntry(calendar);
             }
         });
     }
 
-//    private void addItemToBucketList(int index) {
-//        AppExecutors.getInstance().diskIO().execute(new Runnable() {
-//            @Override
-//            public void run() {
-//
-//                PointsOfInterests item = new PointsOfInterests(poi_name, placeId);
-//                ArrayList<PointsOfInterests> pointsOfInterestsArrayList = new ArrayList<>();
-//                pointsOfInterestsArrayList.add(item);
-//                BucketListItem bucketListItem = new BucketListItem(pointsOfInterestsArrayList);
-//                ArrayList<BucketListItem> items = new ArrayList<>();
-//                items.add(bucketListItem);
-//                BucketList bucketList = new BucketList(mBucketListsName.get(index), items);
-//                mDb.bucketListDao().insertBucket(bucketList);
-//            }
-//        });
-//    }
+    private void addItemToBucketList(int index) {
+        AppExecutors.getInstance().diskIO().execute(new Runnable() {
+            @Override
+            public void run() {
+                PointsOfInterests item = new PointsOfInterests(poi_name, placeId);
+                ArrayList<PointsOfInterests> pointsOfInterestsArrayList = new ArrayList<>();
+                pointsOfInterestsArrayList.add(item);
+                BucketListItem bucketListItem = new BucketListItem(pointsOfInterestsArrayList);
+                ArrayList<BucketListItem> items = new ArrayList<>();
+                items.add(bucketListItem);
+                BucketList bucketList = new BucketList(mBucketListsName.get(index), items);
+                long id = mDb.bucketListDao().insertBucket(bucketList);
+                if (id == -1) {
+                    Log.d(TAG, "BucketList will be updated");
+                    mDb.bucketListDao().updateBucket(bucketList);
+                }
+            }
+        });
+    }
 
     @Override
     public void onDateSet(DatePicker view, int year, int month, int dayOfMonth) {
         addToCalendar(year, month+1 , dayOfMonth);
+    }
+
+    @Override
+    public void onClick(int position) {
+        /*Reviews*/
     }
 }

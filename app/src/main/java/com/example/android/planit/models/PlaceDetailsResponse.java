@@ -6,7 +6,7 @@ import java.util.List;
 
 public class PlaceDetailsResponse {
 
-    @SerializedName("results")
+    @SerializedName("result")
     private PlaceDetails results;
 
     @SerializedName("status")

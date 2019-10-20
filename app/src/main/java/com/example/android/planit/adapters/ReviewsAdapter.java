@@ -1,0 +1,70 @@
+package com.example.android.planit.adapters;
+
+import android.content.Context;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
+
+import androidx.navigation.NavController;
+import androidx.recyclerview.widget.RecyclerView;
+
+import com.example.android.planit.R;
+import com.example.android.planit.models.PlaceReviews;
+import com.example.android.planit.models.PopularDestinations;
+import com.example.android.planit.utils.NetworkUtils;
+import com.example.android.planit.models.PointsOfInterests;
+import com.squareup.picasso.Callback;
+import com.squareup.picasso.Picasso;
+
+import java.util.ArrayList;
+
+public class ReviewsAdapter extends RecyclerView.Adapter<ReviewsAdapterViewHolder> {
+
+    private ArrayList<PlaceReviews> mData;
+    private final ReviewsAdapterOnClickHandler mClickHandler;
+
+    public interface ReviewsAdapterOnClickHandler {
+        void onClick(int position);
+    }
+
+
+    public ReviewsAdapter(ReviewsAdapterOnClickHandler clickHandler, Context context) {
+        mClickHandler = clickHandler;
+    }
+
+    @Override
+    public ReviewsAdapterViewHolder onCreateViewHolder(ViewGroup viewGroup, int viewType) {
+        Context context = viewGroup.getContext();
+        LayoutInflater inflater = LayoutInflater.from(context);
+
+        View view = inflater.inflate(R.layout.reviews_row, viewGroup, false);
+        return new ReviewsAdapterViewHolder(view, mClickHandler);
+    }
+
+    @Override
+    public void onBindViewHolder(ReviewsAdapterViewHolder adapterViewHolder, int position) {
+        Picasso.get()
+                .load(mData.get(position).getProfilePhoto())
+                .placeholder(R.drawable.no_image)
+                .error(R.drawable.no_image)
+                .into(adapterViewHolder.mProfilePhoto);
+
+        adapterViewHolder.mAuthorName.setText(mData.get(position).getAuthorName());
+        adapterViewHolder.mAuthorRating.setRating(mData.get(position).getRating());
+        adapterViewHolder.mReviewTime.setText(mData.get(position).getTime());
+        adapterViewHolder.mReviewText.setText(mData.get(position).getReview());
+
+    }
+
+    @Override
+    public int getItemCount() {
+        if (null == mData) return 0;
+        return mData.size();
+    }
+
+    public void setData(ArrayList<PlaceReviews> mData) {
+        this.mData = mData;
+        notifyDataSetChanged();
+    }
+}
+

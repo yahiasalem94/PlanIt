@@ -1,5 +1,7 @@
 package com.example.android.planit.models;
 
+import androidx.room.Ignore;
+
 import com.google.gson.annotations.SerializedName;
 
 import java.util.ArrayList;
@@ -17,6 +19,12 @@ public class PointsOfInterests {
         this.name = name;
         this.placeId = placeId;
         this.photo = photo;
+    }
+
+    @Ignore
+    public PointsOfInterests(String name, String placeId) {
+        this.name = name;
+        this.placeId = placeId;
     }
 
     public String getName() {

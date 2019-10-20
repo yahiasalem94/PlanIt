@@ -13,12 +13,15 @@ public class PlaceDetails {
     @SerializedName("geometry")
     private Location location;
     private String name;
-    private int rating;
+    private float rating;
     @SerializedName("reviews")
     private ArrayList <PlaceReviews> placeReviews;
     private String website;
+    @SerializedName("opening_hours")
+    private OpeningHours openingHours;
 
-    public PlaceDetails(String address, String phoneNumber, Location location, String name, int rating, ArrayList<PlaceReviews> placeReviews, String website) {
+    public PlaceDetails(String address, String phoneNumber, Location location, String name, float rating,
+                        ArrayList<PlaceReviews> placeReviews, String website, OpeningHours openingHours) {
         this.address = address;
         this.phoneNumber = phoneNumber;
         this.location = location;
@@ -26,6 +29,7 @@ public class PlaceDetails {
         this.rating = rating;
         this.placeReviews = placeReviews;
         this.website = website;
+        this.openingHours = openingHours;
     }
 
     public String getAddress() {
@@ -60,11 +64,11 @@ public class PlaceDetails {
         this.name = name;
     }
 
-    public int getRating() {
+    public float getRating() {
         return rating;
     }
 
-    public void setRating(int rating) {
+    public void setRating(float rating) {
         this.rating = rating;
     }
 
@@ -82,5 +86,13 @@ public class PlaceDetails {
 
     public void setWebsite(String website) {
         this.website = website;
+    }
+
+    public OpeningHours getOpeningHours() {
+        return openingHours;
+    }
+
+    public void setOpeningHours(OpeningHours openingHours) {
+        this.openingHours = openingHours;
     }
 }
