@@ -9,12 +9,15 @@ import android.text.TextUtils;
 import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowManager;
 import android.widget.DatePicker;
 import android.widget.Toast;
 
+import androidx.activity.OnBackPressedCallback;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
@@ -43,6 +46,7 @@ import com.example.android.planit.models.BucketList;
 import com.example.android.planit.models.PopularDestinations;
 import com.example.android.planit.utils.AppExecutors;
 import com.google.android.material.appbar.AppBarLayout;
+import com.google.android.material.navigation.NavigationView;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -112,6 +116,20 @@ public class HomeFragment extends Fragment implements View.OnClickListener, Date
         nestedScrollView = ((MainActivity) getActivity()).nestedScrollView;
         appBarLayout.setExpanded(false);
         nestedScrollView.setNestedScrollingEnabled(false);
+
+        NavigationView navigation = getActivity().findViewById(R.id.nav_view);
+        Menu menu = navigation.getMenu();
+        int size = menu.size();
+
+        for (int i = 0; i < size; i++) {
+            menu.getItem(i).setChecked(false);
+        }
+
+        MenuItem menuItem;
+        menuItem = menu.findItem(R.id.home);
+        if(!menuItem.isChecked()) {
+            menuItem.setChecked(true);
+        }
     }
 
     @Override
@@ -143,6 +161,9 @@ public class HomeFragment extends Fragment implements View.OnClickListener, Date
 
         return binding.getRoot();
     }
+
+
+
 
     private void setupRecyclerView() {
 

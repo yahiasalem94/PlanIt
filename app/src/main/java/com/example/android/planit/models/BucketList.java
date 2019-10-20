@@ -5,6 +5,11 @@ import androidx.annotation.NonNull;
 import androidx.room.Entity;
 import androidx.room.Ignore;
 import androidx.room.PrimaryKey;
+import androidx.room.TypeConverters;
+
+import com.example.android.planit.utils.BucketListItemConverter;
+
+import java.util.List;
 
 @Entity(tableName = "bucket_list")
 public class BucketList {
@@ -12,12 +17,17 @@ public class BucketList {
     @NonNull
     @PrimaryKey
     private String name;
-//    private ArrayList<PointsOfInterests> activities;
+    @TypeConverters(BucketListItemConverter.class)
+    private List<BucketListItem> items;
 
-
-    public BucketList(String name/*, ArrayList<PointsOfInterests> activities*/) {
+    @Ignore
+    public BucketList(String name) {
         this.name = name;
-//        this.activities = activities;
+    }
+//
+    public BucketList(String name, List<BucketListItem> items) {
+        this.name = name;
+        this.items = items;
     }
 
     public String getName() {
@@ -28,11 +38,11 @@ public class BucketList {
         this.name = name;
     }
 
-//    public ArrayList<PointsOfInterests> getActivities() {
-//        return activities;
-//    }
-//
-//    public void setActivities(ArrayList<PointsOfInterests> activities) {
-//        this.activities = activities;
-//    }
+    public List<BucketListItem> getItems() {
+        return items;
+    }
+
+    public void setItems(List<BucketListItem> items) {
+        this.items = items;
+    }
 }

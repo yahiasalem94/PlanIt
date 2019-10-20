@@ -89,8 +89,8 @@ public class bestThingsTodoFragment extends Fragment implements BestThingsTodoAd
     @Override
     public void onAttach(@NonNull Context context) {
         super.onAttach(context);
-        OnBackPressedCallback callback = new OnBackPressedCallback(
-                true) {
+        OnBackPressedCallback callback = new OnBackPressedCallback(true) {
+
             @Override
             public void handleOnBackPressed() {
                 Navigation.findNavController(getActivity(), R.id.nav_host_fragment).navigateUp();

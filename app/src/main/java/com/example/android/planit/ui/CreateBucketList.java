@@ -166,8 +166,11 @@ public class CreateBucketList extends Fragment {
         AppExecutors.getInstance().diskIO().execute(new Runnable() {
             @Override
             public void run() {
-                mDb.bucketListDao().insertBucket(bucketList);
-
+                long id = mDb.bucketListDao().insertBucket(bucketList);
+                if (id == -1) {
+                    Log.d(TAG, "BucketList will be updated");
+                    mDb.bucketListDao().updateBucket(bucketList);
+                }
                 getActivity().runOnUiThread(new Runnable() {
                     @Override
                     public void run() {

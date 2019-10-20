@@ -1,14 +1,18 @@
 package com.example.android.planit.ui;
 
 
+import android.content.Context;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Toast;
 
+import androidx.activity.OnBackPressedCallback;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.databinding.DataBindingUtil;
@@ -29,6 +33,7 @@ import com.example.android.planit.models.BucketList;
 import com.example.android.planit.utils.AppExecutors;
 import com.example.android.planit.utils.ItemTouchHelperCallback;
 import com.example.android.planit.utils.SpacesItemDecoration;
+import com.google.android.material.navigation.NavigationView;
 import com.google.android.material.snackbar.Snackbar;
 
 import java.util.ArrayList;
@@ -65,6 +70,28 @@ public class BucketListFragment extends Fragment implements View.OnClickListener
         bucketListAdapter = new BucketListAdapter(this, getActivity());
         decorator = new SpacesItemDecoration(itemSpace);
 
+    }
+
+    @Override
+    public void onAttach(@NonNull Context context) {
+        super.onAttach(context);
+
+        NavigationView navigation = getActivity().findViewById(R.id.nav_view);
+        Menu drawer_menu = navigation.getMenu();
+        MenuItem menuItem;
+        menuItem = drawer_menu.findItem(R.id.my_bucket_lists);
+        if(!menuItem.isChecked()) {
+            menuItem.setChecked(true);
+        }
+
+        OnBackPressedCallback callback = new OnBackPressedCallback(true) {
+
+            @Override
+            public void handleOnBackPressed() {
+                Navigation.findNavController(getActivity(), R.id.nav_host_fragment).navigateUp();
+            }
+        };
+        requireActivity().getOnBackPressedDispatcher().addCallback(this, callback);
     }
 
     @Override
@@ -159,6 +186,7 @@ public class BucketListFragment extends Fragment implements View.OnClickListener
             public void onChanged(@Nullable List<BucketList> bucketLists) {
                 Log.d(TAG, "Receiving database update from LiveData");
 
+                Log.d(TAG, "bucketlist size" + bucketLists.size()+"");
                 if (bucketLists.size() > 0) {
                     mBucketLists = (ArrayList) bucketLists;
                     binding.emptyBucket.setVisibility(View.INVISIBLE);
