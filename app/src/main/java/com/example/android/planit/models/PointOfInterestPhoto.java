@@ -16,6 +16,11 @@ public class PointOfInterestPhoto {
         this.width = width;
     }
 
+    public PointOfInterestPhoto(String photoReference, int width) {
+        this.photoReference = photoReference;
+        this.width = width;
+    }
+
     public int getHeight() {
         return height;
     }

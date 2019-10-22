@@ -22,13 +22,13 @@ public interface BucketListDao {
     @Query("SELECT * FROM bucket_list")
     LiveData<List<BucketList>> loadAllBucketLists();
 
-//    @Query("SELECT * FROM bucket_list WHERE name = :name")
-//    LiveData<List<BucketListItem>> loadBucket(String name);
+    @Query("SELECT * FROM bucket_list WHERE name = :name")
+    LiveData<BucketList> loadBucket(String name);
 
     @Insert(onConflict = OnConflictStrategy.IGNORE)
     long insertBucket(BucketList bucketList);
 
-    @Update(onConflict = OnConflictStrategy.IGNORE)
+    @Update
     void updateBucket(BucketList bucketList);
 
 

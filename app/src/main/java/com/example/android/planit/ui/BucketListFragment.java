@@ -43,6 +43,7 @@ import java.util.List;
 public class BucketListFragment extends Fragment implements View.OnClickListener, BucketListAdapter.BucketListAdapterOnClickHandler {
 
     private static final String TAG = BucketListFragment.class.getSimpleName();
+    public static final String BUCKET_LIST_NAME = "bucket_name";
 
     private AppDatabase mDb;
 
@@ -121,10 +122,13 @@ public class BucketListFragment extends Fragment implements View.OnClickListener
         showDialog();
     }
 
-    /* Adapter onClick */
+
     @Override
     public void onClick(int position) {
-
+        /* Adapter onClick */
+        Bundle bundle = new Bundle();
+        bundle.putString(BUCKET_LIST_NAME, mBucketLists.get(position).getName());
+        navController.navigate(R.id.bucketListItemsFragment, bundle);
     }
 
 
@@ -186,7 +190,7 @@ public class BucketListFragment extends Fragment implements View.OnClickListener
             public void onChanged(@Nullable List<BucketList> bucketLists) {
                 Log.d(TAG, "Receiving database update from LiveData");
 
-                Log.d(TAG, "bucketlist size" + bucketLists.size()+"");
+                Log.d(TAG, "bucketlist size " + bucketLists.size()+"");
                 if (bucketLists.size() > 0) {
                     mBucketLists = (ArrayList) bucketLists;
                     binding.emptyBucket.setVisibility(View.INVISIBLE);
