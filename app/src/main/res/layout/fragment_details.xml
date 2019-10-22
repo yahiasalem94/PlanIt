@@ -45,8 +45,7 @@
                 android:id="@+id/open_now_value"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="16dp"
-                android:text="Closed"/>
+                android:layout_marginStart="16dp" />
         </LinearLayout>
 
         <LinearLayout
@@ -217,6 +216,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="@dimen/reviews_rv_margin_top"
+            android:layout_marginBottom="32dp"
             android:clipToPadding="false"
             android:scrollbarStyle="outsideOverlay"
             app:layout_behavior="@string/appbar_scrolling_view_behavior"

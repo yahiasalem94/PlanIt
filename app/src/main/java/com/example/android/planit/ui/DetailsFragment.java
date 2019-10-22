@@ -44,10 +44,12 @@ import com.example.android.planit.models.BucketListItem;
 import com.example.android.planit.models.MyCalendar;
 import com.example.android.planit.models.PlaceDetails;
 import com.example.android.planit.models.PlaceDetailsResponse;
+import com.example.android.planit.models.PointOfInterestPhoto;
 import com.example.android.planit.models.PointsOfInterests;
 import com.example.android.planit.utils.ApiInterface;
 import com.example.android.planit.utils.AppExecutors;
 import com.example.android.planit.utils.NetworkUtils;
+import com.example.android.planit.utils.SpacesItemDecoration;
 import com.google.android.material.appbar.AppBarLayout;
 import com.leinardi.android.speeddial.SpeedDialActionItem;
 import com.leinardi.android.speeddial.SpeedDialView;
@@ -75,7 +77,7 @@ public class DetailsFragment extends Fragment implements DatePickerDialog.OnDate
     private int month;
     private int day;
 
-    private String city;
+//    private String city;
     private String placeId;
     private String poi_name;
     private PlaceDetails placeDetails;
@@ -86,7 +88,6 @@ public class DetailsFragment extends Fragment implements DatePickerDialog.OnDate
     private ArrayList<String> mBucketListsName;
 
     private ReviewsAdapter mAdapter;
-    private LinearLayoutManager linearLayoutManager;
 
     /* Retrofit */
     private ApiInterface apiService;
@@ -96,8 +97,6 @@ public class DetailsFragment extends Fragment implements DatePickerDialog.OnDate
 
     /* Views */
     private FragmentDetailsBinding binding;
-    private NestedScrollView nestedScrollView;
-    private AppBarLayout appBarLayout;
     private ImageView header;
     private RecyclerView recyclerView;
 
@@ -117,13 +116,13 @@ public class DetailsFragment extends Fragment implements DatePickerDialog.OnDate
         mBucketLists = new ArrayList<>();
         mBucketListsName = new ArrayList<>();
 
-        if (getArguments() != null && getArguments().containsKey(HomeFragment.CITY_NAME)
+        if (getArguments() != null /*&& getArguments().containsKey(HomeFragment.CITY_NAME)*/
                 && getArguments().containsKey(bestThingsTodoFragment.PLACE_ID)
                 && getArguments().containsKey(bestThingsTodoFragment.POI_NAME)
                 && getArguments().containsKey(bestThingsTodoFragment.PHOTO_REF)
                 && getArguments().containsKey(bestThingsTodoFragment.PHOTO_WIDTH)) {
 
-            city = getArguments().getString(HomeFragment.CITY_NAME);
+           // city = getArguments().getString(HomeFragment.CITY_NAME);
             placeId = getArguments().getString(bestThingsTodoFragment.PLACE_ID);
             poi_name = getArguments().getString(bestThingsTodoFragment.POI_NAME);
             photoRef = getArguments().getString(bestThingsTodoFragment.PHOTO_REF);
@@ -143,9 +142,9 @@ public class DetailsFragment extends Fragment implements DatePickerDialog.OnDate
     @Override
     public void onStart() {
         super.onStart();
-        nestedScrollView = ((MainActivity) getActivity()).nestedScrollView;
+        NestedScrollView nestedScrollView = ((MainActivity) getActivity()).nestedScrollView;
         nestedScrollView.setNestedScrollingEnabled(true);
-        appBarLayout = ((MainActivity) getActivity()).appBarLayout;
+        AppBarLayout appBarLayout = ((MainActivity) getActivity()).appBarLayout;
         appBarLayout.setExpanded(true);
     }
 
@@ -170,22 +169,16 @@ public class DetailsFragment extends Fragment implements DatePickerDialog.OnDate
         header = ((MainActivity) getActivity()).imageView;
 
         binding.addressLayout.setClickable(false);
-        binding.addressLayout.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent(android.content.Intent.ACTION_VIEW,
-                        Uri.parse("google.navigation:q="+placeDetails.getAddress()));
-            }
+        binding.addressLayout.setOnClickListener(v -> {
+            Intent intent = new Intent(Intent.ACTION_VIEW,
+                    Uri.parse("google.navigation:q="+placeDetails.getAddress()));
         });
 
         binding.phoneLayout.setClickable(false);
-        binding.phoneLayout.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent callIntent = new Intent(Intent.ACTION_CALL);
-                callIntent.setData(Uri.parse("tel:"+placeDetails.getPhoneNumber()));
-                startActivity(callIntent);
-            }
+        binding.phoneLayout.setOnClickListener(v -> {
+            Intent callIntent = new Intent(Intent.ACTION_CALL);
+            callIntent.setData(Uri.parse("tel:"+placeDetails.getPhoneNumber()));
+            startActivity(callIntent);
         });
 
         binding.speedDial.addActionItem(
@@ -291,38 +284,51 @@ public class DetailsFragment extends Fragment implements DatePickerDialog.OnDate
 
     private void setupRecyclerView() {
 
-        linearLayoutManager = new LinearLayoutManager(getActivity().getApplicationContext());
+        LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getActivity().getApplicationContext());
         binding.reviewsRecyclerView.setLayoutManager(linearLayoutManager); // set LayoutManager to RecyclerView
+        binding.reviewsRecyclerView.addItemDecoration(new SpacesItemDecoration(20));
         binding.reviewsRecyclerView.setAdapter(mAdapter);
     }
 
     private void setupUI() {
 
-        binding.poiName.setText(placeDetails.getName());
-
-        if (placeDetails.getOpeningHours().getOpenNow()) {
-            binding.openNowValue.setText(getActivity().getString(R.string.open));
+        if (placeDetails.getName() != null) {
+            binding.poiName.setText(placeDetails.getName());
         }
 
-        String rating = String.format ("%.1f", placeDetails.getRating());
+        if (placeDetails.getOpeningHours().getOpenNow() != null) {
+            if (placeDetails.getOpeningHours().getOpenNow()) {
+                binding.openNowValue.setText(getActivity().getString(R.string.open));
+            }
+        }
+
+        String rating = String.format("%.1f", placeDetails.getRating());
         binding.ratingValue.setText(rating);
         binding.ratingBar.setRating(placeDetails.getRating());
 
-        binding.address.setText(placeDetails.getAddress());
-        binding.addressLayout.setClickable(true);
+        if (placeDetails.getAddress() != null) {
+            binding.address.setText(placeDetails.getAddress());
+            binding.addressLayout.setClickable(true);
+        }
 
-        binding.phone.setText(placeDetails.getPhoneNumber());
-        binding.phoneLayout.setClickable(true);
+        if (placeDetails.getPhoneNumber() != null) {
+            binding.phone.setText(placeDetails.getPhoneNumber());
+            binding.phoneLayout.setClickable(true);
+        }
 
-        binding.mondayOpeningHoursTv.setText(placeDetails.getOpeningHours().getWeekdayHours().get(0));
-        binding.tuesdayOpeningHoursTv.setText(placeDetails.getOpeningHours().getWeekdayHours().get(1));
-        binding.wednesdayOpeningHoursTv.setText(placeDetails.getOpeningHours().getWeekdayHours().get(2));
-        binding.thursdayOpeningHoursTv.setText(placeDetails.getOpeningHours().getWeekdayHours().get(3));
-        binding.fridayOpeningHoursTv.setText(placeDetails.getOpeningHours().getWeekdayHours().get(4));
-        binding.saturdayOpeningHoursTv.setText(placeDetails.getOpeningHours().getWeekdayHours().get(5));
-        binding.sundayOpeningHoursTv.setText(placeDetails.getOpeningHours().getWeekdayHours().get(6));
+        if (placeDetails.getOpeningHours().getWeekdayHours() != null) {
+            binding.mondayOpeningHoursTv.setText(placeDetails.getOpeningHours().getWeekdayHours().get(0));
+            binding.tuesdayOpeningHoursTv.setText(placeDetails.getOpeningHours().getWeekdayHours().get(1));
+            binding.wednesdayOpeningHoursTv.setText(placeDetails.getOpeningHours().getWeekdayHours().get(2));
+            binding.thursdayOpeningHoursTv.setText(placeDetails.getOpeningHours().getWeekdayHours().get(3));
+            binding.fridayOpeningHoursTv.setText(placeDetails.getOpeningHours().getWeekdayHours().get(4));
+            binding.saturdayOpeningHoursTv.setText(placeDetails.getOpeningHours().getWeekdayHours().get(5));
+            binding.sundayOpeningHoursTv.setText(placeDetails.getOpeningHours().getWeekdayHours().get(6));
+        }
 
-        mAdapter.setData(placeDetails.getPlaceReviews());
+        if (placeDetails.getPlaceReviews() != null) {
+            mAdapter.setData(placeDetails.getPlaceReviews());
+        }
     }
 
     private void retrieveBucketLists() {
@@ -335,6 +341,8 @@ public class DetailsFragment extends Fragment implements DatePickerDialog.OnDate
                 Log.d(TAG, "Receiving database update from LiveData");
                 if (bucketLists.size() > 0) {
                     mBucketLists = (ArrayList) bucketLists;
+                    Log.d(TAG, mBucketLists.get(0).getName());
+//                    Log.d(TAG, mBucketLists.get(0).getItems().size()+"");
                     for (int i = 0; i<mBucketLists.size(); i++) {
                         mBucketListsName.add(mBucketLists.get(i).getName());
                     }
@@ -380,18 +388,37 @@ public class DetailsFragment extends Fragment implements DatePickerDialog.OnDate
         AppExecutors.getInstance().diskIO().execute(new Runnable() {
             @Override
             public void run() {
-                PointsOfInterests item = new PointsOfInterests(poi_name, placeId);
+                Log.d(TAG, "Adding Item to bucket");
+                PointOfInterestPhoto photo = new PointOfInterestPhoto(photoRef, photoWidth);
+                ArrayList<PointOfInterestPhoto> pointsOfInterestsPhotoArrayList = new ArrayList<>();
+                pointsOfInterestsPhotoArrayList.add(photo);
+
+                PointsOfInterests item = new PointsOfInterests(poi_name, placeId, pointsOfInterestsPhotoArrayList);
                 ArrayList<PointsOfInterests> pointsOfInterestsArrayList = new ArrayList<>();
                 pointsOfInterestsArrayList.add(item);
+
                 BucketListItem bucketListItem = new BucketListItem(pointsOfInterestsArrayList);
                 ArrayList<BucketListItem> items = new ArrayList<>();
+
+                for (int i =0; i < mBucketLists.size(); i++) {
+                    if (mBucketLists.get(i).getName() == mBucketListsName.get(index)) {
+                        if (mBucketLists.get(i).getItems() != null) {
+                            items = mBucketLists.get(i).getItems();
+                            break;
+                        }
+                    }
+                }
                 items.add(bucketListItem);
+
                 BucketList bucketList = new BucketList(mBucketListsName.get(index), items);
-                long id = mDb.bucketListDao().insertBucket(bucketList);
-                if (id == -1) {
+                Log.d(TAG, bucketList.getItems().size()+"");
+                Log.d(TAG, bucketList.getItems().get(0).getActivities().get(0).getName());
+//                long id = mDb.bucketListDao().insertBucket(bucketList);
+//                Log.d(TAG, "Value of insert is" + " " + id+"");
+//                if (id == -1) {
                     Log.d(TAG, "BucketList will be updated");
                     mDb.bucketListDao().updateBucket(bucketList);
-                }
+//                }
             }
         });
     }

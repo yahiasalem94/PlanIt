@@ -10,10 +10,10 @@ public class OpeningHours {
     @SerializedName("weekday_text")
     private ArrayList<String> weekdayHours;
     @SerializedName("open_now")
-    private boolean openNow;
+    private Boolean openNow;
 
 
-    public OpeningHours(ArrayList<String> weekdayHours, boolean openNow) {
+    public OpeningHours(ArrayList<String> weekdayHours, Boolean openNow) {
         this.weekdayHours = weekdayHours;
         this.openNow = openNow;
     }
@@ -26,11 +26,11 @@ public class OpeningHours {
         this.weekdayHours = weekdayHours;
     }
 
-    public boolean getOpenNow() {
+    public Boolean getOpenNow() {
         return openNow;
     }
 
-    public void setOpenNow(boolean openNow) {
+    public void setOpenNow(Boolean openNow) {
         this.openNow = openNow;
     }
 }
