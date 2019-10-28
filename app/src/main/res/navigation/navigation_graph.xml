@@ -107,4 +107,8 @@
         android:name="com.example.android.planit.ui.NoConnectionDialog"
         android:label="dialog_no_connection"
         tools:layout="@layout/dialog_no_connection" />
+    <fragment
+        android:id="@+id/settingsFragment"
+        android:name="com.example.android.planit.ui.SettingsFragment"
+        android:label="SettingsFragment" />
 </navigation>

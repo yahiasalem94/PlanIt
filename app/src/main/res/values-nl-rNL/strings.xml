@@ -1,0 +1,41 @@
+<resources>
+
+    <string name="near_me">Random mij</string>
+    <string name="my_bucket_lists">Mijn BucketLists</string>
+    <string name="my_calendar">Mijn Kalender</string>
+    <string name="settings">Instellingen</string>
+    <string name="home">Huis</string>
+    <string name="lets_go">Laten we Gaan</string>
+
+    <string name="date_template">dd/MMM/yyyy</string>
+    <string name="departure_date">Vertrekdatum</string>
+    <string name="arrival_date">Aankomstdatum</string>
+    <string name="error_message">Kan momenteel geen gegevens ontvangen</string>
+    <string name="no_connection">Geen internet verbinding</string>
+
+    <string name="opening_hours">Openingstijden</string>
+    <string name="open_now">Nu Open</string>
+    <string name="open">Open</string>
+    <string name="sunday">Zondag</string>
+    <string name="monday">Maandag</string>
+    <string name="saturday">Zaterdag</string>
+    <string name="friday">Vrijdag</string>
+    <string name="thursday">Donderdag</string>
+    <string name="wednesday">Woensdag</string>
+    <string name="tuesday">Dinsdag</string>
+    <string name="reviews">Overzicht</string>
+
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="permission_rationale">Om plaatsen in de buurt te kunnen krijgen</string>
+    <string name="permission_denied_explanation">Toestemming wordt geweigerd</string>
+    <string name="no_location_detected">Kon locatie niet vinden</string>
+    <string name="gps_error_message">Schakel GPS in</string>
+    <string name="add_to_calendar">Toevoegen aan agenda</string>
+    <string name="add_to_bucketList">Toevoegen aan bucketlists</string>
+
+    <string name="appwidget_text">EXAMPLE</string>
+    <string name="add_widget">Add widget</string>
+    <string name="no_buckets">Geen BucketLists</string>
+
+    <string name="language_preference">key language</string>
+</resources>

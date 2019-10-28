@@ -21,13 +21,14 @@ import androidx.navigation.ui.NavigationUI;
 
 import com.example.android.planit.Constants;
 import com.example.android.planit.R;
+import com.example.android.planit.utils.BaseActivity;
 import com.example.android.planit.utils.ConnectionReceiver;
 import com.google.android.libraries.places.api.Places;
 import com.google.android.material.appbar.AppBarLayout;
 import com.google.android.material.appbar.CollapsingToolbarLayout;
 import com.google.android.material.navigation.NavigationView;
 
-public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener,
+public class MainActivity extends BaseActivity implements NavigationView.OnNavigationItemSelectedListener,
         ConnectionReceiver.NetworkStateReceiverListener {
 
     private static final String TAG = MainActivity.class.getSimpleName();
@@ -123,6 +124,9 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
             case R.id.my_calendar:
                 navController.navigate(R.id.myCalendarFragment);
+                break;
+            case R.id.settings:
+                navController.navigate(R.id.settingsFragment);
                 break;
         }
         drawerLayout.closeDrawers();

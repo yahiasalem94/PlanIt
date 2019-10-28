@@ -1,0 +1,14 @@
+<androidx.preference.PreferenceScreen
+    xmlns:android="http://schemas.android.com/apk/res/android">
+    <androidx.preference.PreferenceCategory
+        android:title="Basic Settings">
+            <ListPreference
+                android:dialogTitle="Select Language"
+                android:entries="@array/settings_list_preference_titles"
+                android:entryValues="@array/settings_list_preference_values"
+                android:key="@string/language_preference"
+                android:summary="Click to show a language list to choose from"
+                android:title="List Preference" />
+    </androidx.preference.PreferenceCategory>
+
+</androidx.preference.PreferenceScreen>

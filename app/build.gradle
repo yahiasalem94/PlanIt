@@ -43,6 +43,8 @@ dependencies {
     implementation 'androidx.navigation:navigation-fragment:2.1.0'
     implementation 'androidx.navigation:navigation-ui:2.1.0'
 
+    implementation 'androidx.preference:preference:1.1.0'
+
     implementation 'de.hdodenhof:circleimageview:3.0.1'
 
     implementation 'com.github.prolificinteractive:material-calendarview:2.0.0'
