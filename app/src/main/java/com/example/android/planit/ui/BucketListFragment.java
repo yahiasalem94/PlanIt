@@ -26,6 +26,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.android.planit.R;
+import com.example.android.planit.Widget.WidgetUpdateService;
 import com.example.android.planit.adapters.BucketListAdapter;
 import com.example.android.planit.database.AppDatabase;
 import com.example.android.planit.databinding.FragmentMyBucketListsBinding;
@@ -303,6 +304,7 @@ public class BucketListFragment extends Fragment implements View.OnClickListener
 
             }
         });
+        WidgetUpdateService.startActionUpdate(getActivity().getApplicationContext());
     }
 
 }

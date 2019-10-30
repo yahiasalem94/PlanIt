@@ -18,6 +18,7 @@ import androidx.navigation.Navigation;
 
 import com.example.android.planit.Constants;
 import com.example.android.planit.R;
+import com.example.android.planit.Widget.WidgetUpdateService;
 import com.example.android.planit.database.AppDatabase;
 import com.example.android.planit.models.BucketList;
 import com.example.android.planit.utils.AppExecutors;
@@ -64,23 +65,11 @@ public class CreateBucketList extends Fragment {
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         mRootview =  inflater.inflate(R.layout.create_bucket_dialog, container, false);
 
-//        txtVw = mRootview.findViewById(R.id.placeName);
-//        queryText = mRootview.findViewById(R.id.inputEditText);
-//        mSearchButton = mRootview.findViewById(R.id.searchButton);
-//        mSearchResult = mRootview.findViewById(R.id.searchResult);
-//        String apiKey = Constants.GOOGLE_API_KEY;
-//
-//        if (!Places.isInitialized()) {
-//            Places.initialize(getActivity().getApplicationContext(), apiKey);
-//        }
-//        // Create a new Places client instance.
-//        placesClient = Places.createClient(getActivity());
         Places.initialize(getActivity().getApplicationContext(), Constants.GOOGLE_API_KEY);
         // Create a new Places client instance.
         PlacesClient placesClient = Places.createClient(getActivity());
 
         autocompleteFragment = (AutocompleteSupportFragment) getChildFragmentManager().findFragmentById(R.id.autocomplete_fragment);
-//        txtView = mRootview.findViewById(R.id.txtView);
 
 
         // Specify the types of place data to return.
@@ -179,6 +168,7 @@ public class CreateBucketList extends Fragment {
                 });
             }
         });
+        WidgetUpdateService.startActionUpdate(getActivity().getApplicationContext());
     }
 
     @Override

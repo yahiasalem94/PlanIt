@@ -22,6 +22,9 @@ public interface BucketListDao {
     @Query("SELECT * FROM bucket_list")
     LiveData<List<BucketList>> loadAllBucketLists();
 
+    @Query("SELECT * FROM bucket_list")
+    List<BucketList> loadWidgetBucketLists();
+
     @Query("SELECT * FROM bucket_list WHERE name = :name")
     LiveData<BucketList> loadBucket(String name);
 
