@@ -30,15 +30,23 @@ public class ConnectionReceiver extends BroadcastReceiver {
         ConnectivityManager manager = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
         NetworkInfo networkInfo = manager.getActiveNetworkInfo();
 
-        if(networkInfo != null && networkInfo.getState() == NetworkInfo.State.CONNECTED) {
-            connected = true;
-        } else if(intent.getBooleanExtra(ConnectivityManager.EXTRA_NO_CONNECTIVITY,Boolean.FALSE)) {
-            connected = false;
-        }
+//        if(networkInfo != null && networkInfo.getState() == NetworkInfo.State.CONNECTED) {
+//            connected = true;
+//        } else if(intent.getBooleanExtra(ConnectivityManager.EXTRA_NO_CONNECTIVITY,Boolean.FALSE)) {
+//            connected = false;
+//        }
+        connected = isOnline(context);
+
 
         notifyStateToAll();
     }
 
+    private boolean isOnline (Context context) {
+        ConnectivityManager cm = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
+        NetworkInfo netInfo = cm.getActiveNetworkInfo();
+        //should check null because in airplane mode it will be null
+        return (netInfo != null && netInfo.isConnected());
+    }
     private void notifyStateToAll() {
         for(NetworkStateReceiverListener listener : listeners)
             notifyState(listener);

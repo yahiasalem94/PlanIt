@@ -33,6 +33,7 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
 
     private static final String TAG = MainActivity.class.getSimpleName();
 
+    private boolean isDisconnected = false;
     private DrawerLayout drawerLayout;
     private NavigationView navigationView;
     private AppBarConfiguration appBarConfiguration;
@@ -84,7 +85,8 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
 
          appBarConfiguration = new AppBarConfiguration.Builder(
                  R.id.homeFragment, R.id.bucketListFragment,
-                 R.id.myCalendarFragment, R.id.bestThingsTodoFragment).setDrawerLayout(drawerLayout).build();
+                 R.id.myCalendarFragment, R.id.bestThingsTodoFragment,
+                 R.id.noConnectionDialog).setDrawerLayout(drawerLayout).build();
 
          NavigationUI.setupWithNavController(collapsingToolbarLayout, toolbar, navController, appBarConfiguration);
          navigationView.setNavigationItemSelectedListener(this);
@@ -137,13 +139,16 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
     @Override
     public void networkAvailable(boolean isAvailable) {
         if(!isAvailable) {
+            isDisconnected = true;
+            getSupportActionBar().hide();
             getSupportActionBar().setHomeButtonEnabled(false);
             navController.navigate(R.id.noConnectionDialog);
         }else{
-            Fragment prev = getFragmentManager().findFragmentByTag("dialog");
-            if (prev != null) {
-                // dismiss the dialog or refresh the activity
+            if (isDisconnected) {
                 navController.navigate(R.id.homeFragment);
+                getSupportActionBar().show();
+                getSupportActionBar().setHomeButtonEnabled(true);
+                isDisconnected = false;
             }
         }
     }
