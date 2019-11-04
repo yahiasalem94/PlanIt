@@ -22,6 +22,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
+import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.coordinatorlayout.widget.CoordinatorLayout;
 import androidx.core.content.ContextCompat;
 import androidx.core.widget.NestedScrollView;
@@ -46,6 +47,7 @@ import com.example.android.planit.models.BucketList;
 import com.example.android.planit.models.PopularDestinations;
 import com.example.android.planit.utils.AppExecutors;
 import com.google.android.material.appbar.AppBarLayout;
+import com.google.android.material.appbar.CollapsingToolbarLayout;
 import com.google.android.material.navigation.NavigationView;
 
 import java.text.ParseException;
@@ -57,7 +59,7 @@ import java.util.GregorianCalendar;
 import java.util.List;
 
 
-public class HomeFragment extends Fragment implements View.OnClickListener, DatePickerDialog.OnDateSetListener,
+public class HomeFragment extends Fragment implements View.OnClickListener,
         PopularDestinationsAdapter.PopularDestinationsAdapterOnClickHandler {
 
     private static final String TAG = HomeFragment.class.getSimpleName();
@@ -65,21 +67,12 @@ public class HomeFragment extends Fragment implements View.OnClickListener, Date
 
     private NavController navController;
 
-    SimpleDateFormat dateFormatter;
-    Date departDate;
-    Date arrivalDate;
-    private final Calendar calendar;
-    private int year;
-    private int month;
-    private int day;
-
-    boolean isDeparture = false;
-    boolean isDepartureSet = false;
     /* Views */
     private FragmentHomeBinding binding;
     private AppBarLayout appBarLayout;
+    private CollapsingToolbarLayout collapsingToolbarLayout;
+    private Toolbar toolbar;
     private NestedScrollView nestedScrollView;
-    private DatePickerDialog datePickerDialog;
 
     private PopularDestinationsAdapter mAdapter;
     private ArrayList<PopularDestinations> mPopularDestinations;
@@ -87,22 +80,12 @@ public class HomeFragment extends Fragment implements View.OnClickListener, Date
 
     private AppDatabase mDb;
 
-    public HomeFragment() {
-        // Required empty public constructor
-        calendar = Calendar.getInstance();
-        year = calendar.get(Calendar.YEAR);
-        month = calendar.get(Calendar.MONTH);
-        day = calendar.get(Calendar.DAY_OF_MONTH);
-    }
-
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
         mDb = AppDatabase.getPopularDestinationsDbInstance((getActivity()).getApplicationContext());
-        datePickerDialog = new DatePickerDialog(getActivity(), this, year, month, day);
-        dateFormatter = new SimpleDateFormat("dd/MM/yyyy");
 
         mAdapter = new PopularDestinationsAdapter(this, getActivity());
 
@@ -112,11 +95,6 @@ public class HomeFragment extends Fragment implements View.OnClickListener, Date
     @Override
     public void onStart() {
         super.onStart();
-        appBarLayout = ((MainActivity) getActivity()).appBarLayout;
-        nestedScrollView = ((MainActivity) getActivity()).nestedScrollView;
-        appBarLayout.setExpanded(false);
-        nestedScrollView.setNestedScrollingEnabled(false);
-
         NavigationView navigation = getActivity().findViewById(R.id.nav_view);
         Menu menu = navigation.getMenu();
         int size = menu.size();
@@ -133,26 +111,16 @@ public class HomeFragment extends Fragment implements View.OnClickListener, Date
     }
 
     @Override
+    public void onResume() {
+        super.onResume();
+        ((MainActivity) getContext()).lockAppBarClosed();
+    }
+
+    @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 
         binding = DataBindingUtil.inflate(inflater, R.layout.fragment_home, container, false);
         binding.searchButton.setOnClickListener(this);
-        binding.departureDateLayout.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                datePickerDialog.show();
-                isDeparture = true;
-            }
-        });
-
-        binding.arrivalDateLayout.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                datePickerDialog.show();
-                isDeparture = false;
-            }
-        });
-
 
         navController = Navigation.findNavController(getActivity(), R.id.nav_host_fragment);
         Navigation.setViewNavController(binding.searchButton, navController);
@@ -193,37 +161,6 @@ public class HomeFragment extends Fragment implements View.OnClickListener, Date
             navController.navigate(R.id.bestThingsTodoFragment, bundle);
         } else {
             Toast.makeText(getActivity(), "Please enter a City", Toast.LENGTH_SHORT).show();
-        }
-    }
-
-    @Override
-    public void onDateSet (DatePicker view,int year, int month, int dayOfMonth){
-        String date = day + "/" + (month + 1) + "/" + year;
-        if (isDeparture) {
-            try {
-                departDate = dateFormatter.parse(date);
-                binding.departureDate.setText(date);
-                isDepartureSet = true;
-            } catch (ParseException e) {
-                Toast.makeText(getActivity(), "Please enter a valid Date", Toast.LENGTH_SHORT).show();
-                e.printStackTrace();
-            }
-        } else {
-            if (isDepartureSet) {
-                try {
-                    arrivalDate = dateFormatter.parse(date);
-                    if (arrivalDate.after(departDate)) {
-                        binding.arrivalDate.setText(date);
-                    } else {
-                        Toast.makeText(getActivity(), "Please enter a valid Date", Toast.LENGTH_SHORT).show();
-                    }
-                } catch (ParseException e) {
-                    e.printStackTrace();
-                }
-            } else {
-                datePickerDialog.cancel();
-                Toast.makeText(getActivity(), "Please enter a Departure date first", Toast.LENGTH_SHORT).show();
-            }
         }
     }
 

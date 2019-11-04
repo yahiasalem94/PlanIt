@@ -38,4 +38,5 @@
     <string name="no_buckets">Geen BucketLists</string>
 
     <string name="language_preference">key language</string>
+    <string name="empty_bucketlist">BucketList is leeg</string>
 </resources>

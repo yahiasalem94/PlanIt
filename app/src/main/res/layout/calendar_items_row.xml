@@ -18,6 +18,7 @@
             android:layout_height="match_parent"
             android:orientation="horizontal">
 
+
             <de.hdodenhof.circleimageview.CircleImageView
                 xmlns:app="http://schemas.android.com/apk/res-auto"
                 android:id="@+id/poi_image"

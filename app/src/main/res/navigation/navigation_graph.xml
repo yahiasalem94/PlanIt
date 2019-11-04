@@ -7,6 +7,7 @@
 
     <fragment
         android:id="@+id/homeFragment"
+        android:label="@string/app_name"
         android:name="com.example.android.planit.ui.HomeFragment"
         tools:layout="@layout/fragment_home" >
         <action
@@ -40,6 +41,7 @@
     </fragment>
     <fragment
         android:id="@+id/bucketListFragment"
+        android:label="@string/app_name"
         android:name="com.example.android.planit.ui.BucketListFragment"
         tools:layout="@layout/fragment_my_bucket_lists" >
         <action
@@ -59,14 +61,17 @@
     </fragment>
     <fragment
         android:id="@+id/myCalendarFragment"
+        android:label="@string/app_name"
         android:name="com.example.android.planit.ui.MyCalendarFragment"
         tools:layout="@layout/fragment_calendar" />
     <fragment
         android:id="@+id/bucketListItemsFragment"
+        android:label="@string/app_name"
         android:name="com.example.android.planit.ui.BucketListItemsFragment"
         tools:layout="@layout/fragment_bucket_list_items" />
     <fragment
         android:id="@+id/bestThingsTodoFragment"
+        android:label="@string/app_name"
         android:name="com.example.android.planit.ui.bestThingsTodoFragment"
         tools:layout="@layout/fragment_best_things_todo" >
         <action
@@ -106,9 +111,15 @@
         android:id="@+id/noConnectionDialog"
         android:name="com.example.android.planit.ui.NoConnectionDialog"
         android:label="dialog_no_connection"
+        android:tag="dialog"
         tools:layout="@layout/dialog_no_connection" />
     <fragment
         android:id="@+id/settingsFragment"
         android:name="com.example.android.planit.ui.SettingsFragment"
         android:label="SettingsFragment" />
+    <fragment
+        android:id="@+id/calendarItems"
+        android:name="com.example.android.planit.ui.CalendarItems"
+        android:label="fragment_calendar_items"
+        tools:layout="@layout/fragment_calendar_items" />
 </navigation>

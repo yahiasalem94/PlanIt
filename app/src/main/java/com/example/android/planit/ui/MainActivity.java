@@ -3,6 +3,7 @@ package com.example.android.planit.ui;
 import android.app.Fragment;
 import android.content.IntentFilter;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.MenuItem;
 import android.view.WindowManager;
 import android.widget.ImageView;
@@ -10,6 +11,7 @@ import android.widget.ImageView;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
+import androidx.coordinatorlayout.widget.CoordinatorLayout;
 import androidx.core.view.GravityCompat;
 import androidx.core.widget.NestedScrollView;
 import androidx.drawerlayout.widget.DrawerLayout;
@@ -23,13 +25,19 @@ import com.example.android.planit.Constants;
 import com.example.android.planit.R;
 import com.example.android.planit.utils.BaseActivity;
 import com.example.android.planit.utils.ConnectionReceiver;
+import com.google.android.gms.ads.AdRequest;
+import com.google.android.gms.ads.AdView;
+import com.google.android.gms.ads.MobileAds;
+import com.google.android.gms.ads.initialization.InitializationStatus;
+import com.google.android.gms.ads.initialization.OnInitializationCompleteListener;
 import com.google.android.libraries.places.api.Places;
 import com.google.android.material.appbar.AppBarLayout;
 import com.google.android.material.appbar.CollapsingToolbarLayout;
 import com.google.android.material.navigation.NavigationView;
+import com.leinardi.android.speeddial.SpeedDialView;
 
 public class MainActivity extends BaseActivity implements NavigationView.OnNavigationItemSelectedListener,
-        ConnectionReceiver.NetworkStateReceiverListener {
+        ConnectionReceiver.NetworkStateReceiverListener, CollapsingToolbarListener {
 
     private static final String TAG = MainActivity.class.getSimpleName();
 
@@ -38,11 +46,13 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
     private NavigationView navigationView;
     private AppBarConfiguration appBarConfiguration;
     public Toolbar toolbar;
-    private CollapsingToolbarLayout collapsingToolbarLayout;
+    public CollapsingToolbarLayout collapsingToolbarLayout;
     public AppBarLayout appBarLayout;
     private NavController navController;
     public NestedScrollView nestedScrollView;
     public ImageView imageView;
+    private AdView mAdView;
+    public SpeedDialView speedDialView;
 
     private ConnectionReceiver mConnectionReciever;
     @Override
@@ -51,6 +61,13 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
         setContentView(R.layout.activity_main);
 
         this.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
+
+        // Initialize the Google Mobile Ads SDK
+        MobileAds.initialize(this,"ca-app-pub-3940256099942544~3347511713" /*getString(R.string.adMob_appId)*/);
+
+        mAdView = findViewById(R.id.adView);
+        AdRequest adRequest = new AdRequest.Builder().build();
+        mAdView.loadAd(adRequest);
 
         mConnectionReciever = new ConnectionReceiver();
         mConnectionReciever.addListener(this);
@@ -67,6 +84,8 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
 
         drawerLayout = findViewById(R.id.drawer_layout);
         navigationView = findViewById(R.id.nav_view );
+
+        speedDialView = findViewById(R.id.speedDial);
 
         setupNavigation();
     }
@@ -152,4 +171,36 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
             }
         }
     }
+
+    @Override
+    public void unlockAppBarOpen() {
+
+        appBarLayout.setExpanded(true, true);
+        appBarLayout.setActivated(true);
+        CoordinatorLayout.LayoutParams lp = (CoordinatorLayout.LayoutParams)appBarLayout.getLayoutParams();
+        lp.height = (int) getResources().getDimension(R.dimen.app_bar_height);
+        appBarLayout.setLayoutParams(lp);
+//        nestedScrollView.setNestedScrollingEnabled(true);
+        toolbar.setTitle("");
+    }
+
+    @Override
+    public void lockAppBarClosed() {
+        appBarLayout.setExpanded(false, true);
+        appBarLayout.setActivated(false);
+
+        CoordinatorLayout.LayoutParams lp = (CoordinatorLayout.LayoutParams)appBarLayout.getLayoutParams();
+        lp.height = (int) getResources().getDimension(R.dimen.toolbar_height);
+
+        appBarLayout.setLayoutParams(lp);
+        collapsingToolbarLayout.setTitleEnabled(false);
+        toolbar.setTitle(getString(R.string.app_name));
+
+//        nestedScrollView.setNestedScrollingEnabled(false);
+    }
+}
+
+interface CollapsingToolbarListener {
+   void unlockAppBarOpen();
+   void lockAppBarClosed();
 }

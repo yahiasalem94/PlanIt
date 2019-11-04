@@ -34,7 +34,6 @@ public interface BucketListDao {
     @Update
     void updateBucket(BucketList bucketList);
 
-
     @Delete
     void deleteBucket(BucketList bucketList);
 

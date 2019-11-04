@@ -127,11 +127,24 @@ public class BucketListFragment extends Fragment implements View.OnClickListener
     @Override
     public void onClick(int position) {
         /* Adapter onClick */
-        Bundle bundle = new Bundle();
-        bundle.putString(BUCKET_LIST_NAME, mBucketLists.get(position).getName());
-        navController.navigate(R.id.bucketListItemsFragment, bundle);
+        if (isThereItems(position)) {
+            Bundle bundle = new Bundle();
+            bundle.putString(BUCKET_LIST_NAME, mBucketLists.get(position).getName());
+            navController.navigate(R.id.bucketListItemsFragment, bundle);
+        } else {
+            Toast.makeText(getActivity(), getResources().getString(R.string.empty_bucketlist), Toast.LENGTH_SHORT).show();
+        }
     }
 
+    private boolean isThereItems(int position) {
+        boolean result = false;
+        if (mBucketLists.get(position).getItems() != null) {
+            if (mBucketLists.get(position).getItems().size() > 0) {
+                result = true;
+            }
+        }
+        return result;
+    }
 
     private void setupRecyclerView() {
 
@@ -153,8 +166,8 @@ public class BucketListFragment extends Fragment implements View.OnClickListener
 
                 bucketListAdapter.removeItem(position);
 
-                Snackbar snackbar = Snackbar.make(binding.constraintLayout, "Item was removed from the list.", Snackbar.LENGTH_LONG);
-                snackbar.setAction("UNDO", new View.OnClickListener() {
+                Snackbar snackbar = Snackbar.make(binding.constraintLayout, getActivity().getString(R.string.item_removed), Snackbar.LENGTH_LONG);
+                snackbar.setAction(getActivity().getString(R.string.undo), new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
 

@@ -13,12 +13,15 @@ import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.Observer;
+import androidx.navigation.NavController;
+import androidx.navigation.Navigation;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.android.planit.R;
 import com.example.android.planit.adapters.CalendarAdapter;
 import com.example.android.planit.database.AppDatabase;
+import com.example.android.planit.models.BucketListItem;
 import com.example.android.planit.models.MyCalendar;
 import com.example.android.planit.utils.EventDecorator;
 import com.prolificinteractive.materialcalendarview.CalendarDay;
@@ -32,19 +35,24 @@ import java.util.List;
 public class MyCalendarFragment extends Fragment implements  CalendarAdapter.CalendarAdapterOnClickHandler {
 
     private static final String TAG = MyCalendarFragment.class.getSimpleName();
+    public static final String CALENDAR_ITEMS = "calendar_items";
+    public static final String CALENDAR_ENTRY = "calendar_entry";
 
     private AppDatabase mDb;
 
     private ArrayList<MyCalendar> calendarsEntries;
     private ArrayList<CalendarDay> calendarDays;
-    private ArrayList<String> eventNames;
+    private ArrayList<BucketListItem> items;
+    private int position;
     private CalendarDay eventDate;
+    private boolean foundItems = false;
     /* Views */
     private View mRootView;
     private MaterialCalendarView mCalendarView;
     private RecyclerView recyclerView;
     private LinearLayoutManager linearLayoutManager;
 
+    private NavController navController;
 
     private CalendarAdapter mAdapter;
 
@@ -57,6 +65,14 @@ public class MyCalendarFragment extends Fragment implements  CalendarAdapter.Cal
         super.onCreate(savedInstanceState);
         mDb = AppDatabase.getMyCalendarDbInstance((getActivity()).getApplicationContext());
         mAdapter = new CalendarAdapter(this, getActivity());
+        navController = Navigation.findNavController(getActivity(), R.id.nav_host_fragment);
+        items = new ArrayList<>();
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        ((MainActivity) getContext()).lockAppBarClosed();
     }
 
     @Override
@@ -72,17 +88,26 @@ public class MyCalendarFragment extends Fragment implements  CalendarAdapter.Cal
         mCalendarView.setOnDateChangedListener(new OnDateSelectedListener() {
             @Override
             public void onDateSelected(@NonNull MaterialCalendarView widget, @NonNull CalendarDay date, boolean selected) {
-                eventNames = new ArrayList<>();
                 for (int i = 0; i<calendarsEntries.size(); i++) {
                     eventDate = CalendarDay.from(calendarsEntries.get(i).getYear(),
                             calendarsEntries.get(i).getMonth(),
                             calendarsEntries.get(i).getDay());
 
                     if (eventDate.equals(date)) {
-                        eventNames.add(calendarsEntries.get(i).getName());
+                        items = calendarsEntries.get(i).getItems();
+                        position = i;
+                        foundItems = true;
                     }
                 }
-                mAdapter.setData(eventNames);
+//                mAdapter.setData(eventNames);
+                if (foundItems) {
+                    foundItems = false;
+                    Bundle bundle = new Bundle();
+                    bundle.putParcelableArrayList(CALENDAR_ITEMS, items);
+//                    bundle.putParcelable(CALENDAR_ENTRY, calendarsEntries.get(position));
+                    bundle.putParcelable(CALENDAR_ENTRY, calendarsEntries.get(position).getDate());
+                    navController.navigate(R.id.calendarItems, bundle);
+                }
             }
         });
 

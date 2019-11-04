@@ -77,5 +77,19 @@ public class BucketListItemsAdapter extends RecyclerView.Adapter<BucketListItems
         this.mData = mData;
         notifyDataSetChanged();
     }
+
+    public ArrayList<BucketListItem> getData() {
+        return mData;
+    }
+
+    public void removeItem(int position) {
+        mData.remove(position);
+        notifyItemRemoved(position);
+    }
+
+    public void restoreItem(BucketListItem item, int position) {
+        mData.add(position, item);
+        notifyItemInserted(position);
+    }
 }
 

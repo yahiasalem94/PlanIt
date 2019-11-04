@@ -4,6 +4,10 @@ package com.example.android.planit.ui;
 import android.content.Context;
 import android.graphics.Color;
 import android.os.Bundle;
+import android.util.Log;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
 
 import androidx.activity.OnBackPressedCallback;
 import androidx.annotation.NonNull;
@@ -15,38 +19,33 @@ import androidx.lifecycle.LiveData;
 import androidx.lifecycle.Observer;
 import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
-import androidx.navigation.fragment.FragmentNavigator;
 import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import android.util.Log;
-import android.view.LayoutInflater;
-import android.view.View;
-import android.view.ViewGroup;
-import android.widget.TextView;
-import android.widget.Toast;
-
 import com.example.android.planit.R;
 import com.example.android.planit.adapters.BucketListItemsAdapter;
 import com.example.android.planit.database.AppDatabase;
-import com.example.android.planit.models.BucketList;
 import com.example.android.planit.models.BucketListItem;
+import com.example.android.planit.models.MyCalendar;
 import com.example.android.planit.utils.AppExecutors;
 import com.example.android.planit.utils.ItemTouchHelperCallback;
 import com.google.android.material.appbar.AppBarLayout;
 import com.google.android.material.snackbar.Snackbar;
+import com.prolificinteractive.materialcalendarview.CalendarDay;
 
 import java.util.ArrayList;
-import java.util.List;
 
 
-public class BucketListItemsFragment extends Fragment implements BucketListItemsAdapter.BucketListItemsAdapterOnClickHandler {
+public class CalendarItems extends Fragment implements BucketListItemsAdapter.BucketListItemsAdapterOnClickHandler {
 
-    private static final String TAG = BucketListItemsFragment.class.getSimpleName();
+    private static final String TAG = CalendarItems.class.getSimpleName();
 
     private String bucketName;
-    private BucketList mBucketList;
+//    private BucketList mBucketList;
+    private MyCalendar calendarEntry;
+    private ArrayList<BucketListItem> items;
+    private CalendarDay date;
     private BucketListItemsAdapter mBucketListItemAdapter;
 
     private AppDatabase mDb;
@@ -62,7 +61,7 @@ public class BucketListItemsFragment extends Fragment implements BucketListItems
 
     private NavController navController;
 
-    public BucketListItemsFragment() {
+    public CalendarItems() {
         // Required empty public constructor
     }
 
@@ -70,20 +69,23 @@ public class BucketListItemsFragment extends Fragment implements BucketListItems
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        if (getArguments() != null && getArguments().containsKey(BucketListFragment.BUCKET_LIST_NAME)) {
-            bucketName = getArguments().getString(BucketListFragment.BUCKET_LIST_NAME);
+        if (getArguments() != null && getArguments().containsKey(MyCalendarFragment.CALENDAR_ITEMS)
+                && getArguments().containsKey(MyCalendarFragment.CALENDAR_ENTRY)) {
+            items = getArguments().getParcelableArrayList(MyCalendarFragment.CALENDAR_ITEMS);
+//            calendarEntry = getArguments().getParcelable(MyCalendarFragment.CALENDAR_ENTRY);
+            date = getArguments().getParcelable(MyCalendarFragment.CALENDAR_ENTRY);
         }
 
-        mDb = AppDatabase.getBucketListDbInstance((getActivity()).getApplicationContext());
+        mDb = AppDatabase.getMyCalendarDbInstance((getActivity()).getApplicationContext());
         mBucketListItemAdapter = new BucketListItemsAdapter(this, getActivity());
         navController = Navigation.findNavController(getActivity(), R.id.nav_host_fragment);
-        loadBucketListItem();
+        loadCalendarEntry();
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        mRootView = inflater.inflate(R.layout.fragment_bucket_list_items, container, false);
+        mRootView = inflater.inflate(R.layout.fragment_calendar_items, container, false);
         recyclerView = mRootView.findViewById(R.id.recycler_view);
         constraintLayout = mRootView.findViewById(R.id.constraintLayout);
 
@@ -117,6 +119,30 @@ public class BucketListItemsFragment extends Fragment implements BucketListItems
         recyclerView.setAdapter(mBucketListItemAdapter);
     }
 
+    private void loadCalendarEntry() {
+        Log.d(TAG, "Actively retrieving the entries from the DataBase");
+        int year = date.getYear();
+        int month = date.getMonth();
+        int day = date.getDay();
+        String stringDate;
+        StringBuffer sb = new StringBuffer();
+        sb.append(year).append(month).append(day);
+        stringDate = sb.toString();
+        Log.d(TAG, stringDate);
+        LiveData<MyCalendar> entry = mDb.myCalendarDao().loadEntry(stringDate);
+        entry.observe(this, new Observer<MyCalendar>() {
+            @Override
+            public void onChanged(@Nullable MyCalendar entry) {
+                Log.d(TAG, "Receiving database update from LiveData");
+                if (entry != null) {
+                    calendarEntry = entry;
+                    mBucketListItemAdapter.setData(calendarEntry.getItems());
+                }
+            }
+        });
+    }
+
+
     private void enableSwipeToDeleteAndUndo() {
         ItemTouchHelperCallback swipeToDeleteCallback = new ItemTouchHelperCallback(getActivity()) {
             @Override
@@ -140,7 +166,7 @@ public class BucketListItemsFragment extends Fragment implements BucketListItems
                     @Override
                     public void onDismissed(Snackbar snackbar, int event) {
                         //see Snackbar.Callback docs for event details
-                        deleteBucketListItem(item);
+                        deleteBucketListItem(item, position);
                     }
 
                 });
@@ -155,32 +181,19 @@ public class BucketListItemsFragment extends Fragment implements BucketListItems
         itemTouchhelper.attachToRecyclerView(recyclerView);
     }
 
-    private void deleteBucketListItem(final BucketListItem bucketListItem) {
+    private void deleteBucketListItem(final BucketListItem bucketListItem, final int position) {
         AppExecutors.getInstance().diskIO().execute(new Runnable() {
             @Override
             public void run() {
-                mBucketList.getItems().remove(bucketListItem);
-                mDb.bucketListDao().updateBucket(mBucketList);
+//                items.get(position).getActivities().remove(bucketListItem);
+                calendarEntry.getItems().remove(bucketListItem);
 
-            }
-        });
-    }
-
-    private void loadBucketListItem() {
-        Log.d(TAG, "Actively retrieving the bucketList from the DataBase");
-        LiveData<BucketList> bucketList = mDb.bucketListDao().loadBucket(bucketName);
-
-        bucketList.observe(this, new Observer<BucketList>() {
-            @Override
-            public void onChanged(@Nullable BucketList bucketList) {
-                Log.d(TAG, "Receiving database update from LiveData");
-                if (bucketList != null) {
-                    Log.d(TAG, "bucketlist is not null");
-                    Log.d(TAG, bucketList.getName());
-                    Log.d(TAG, bucketList.getItems().size() + "");
-                    mBucketList = bucketList;
-                    mBucketListItemAdapter.setData(bucketList.getItems());
+                if (calendarEntry.getItems().size() > 0) {
+                    mDb.myCalendarDao().updateaCalendarEntry(calendarEntry);
+                } else {
+                    mDb.myCalendarDao().deleteCalendarEntry(calendarEntry);
                 }
+
             }
         });
     }
@@ -189,14 +202,15 @@ public class BucketListItemsFragment extends Fragment implements BucketListItems
     public void onClick(int position) {
         /* Adapter OnClick */
         Bundle bundle = new Bundle();
-        bundle.putString(bestThingsTodoFragment.PLACE_ID, mBucketList.getItems().get(position).getActivities().get(0).getPlaceId());
-        bundle.putString(bestThingsTodoFragment.POI_NAME, mBucketList.getItems().get(position).getActivities().get(0).getName());
+        bundle.putString(bestThingsTodoFragment.PLACE_ID, items.get(position).getActivities().get(0).getPlaceId());
+        bundle.putString(bestThingsTodoFragment.POI_NAME, items.get(position).getActivities().get(0).getName());
         bundle.putString(bestThingsTodoFragment.PHOTO_REF,
-                mBucketList.getItems().get(position).getActivities().get(0).getPhoto().get(0).getPhotoReference());
+                items.get(position).getActivities().get(0).getPhoto().get(0).getPhotoReference());
         bundle.putInt(bestThingsTodoFragment.PHOTO_WIDTH,
-                mBucketList.getItems().get(position).getActivities().get(0).getPhoto().get(0).getWidth());
+                items.get(position).getActivities().get(0).getPhoto().get(0).getWidth());
 
 
         navController.navigate(R.id.detailsFragment, bundle);
     }
 }
+
