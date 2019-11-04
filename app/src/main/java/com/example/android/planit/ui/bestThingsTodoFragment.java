@@ -103,8 +103,8 @@ public class bestThingsTodoFragment extends Fragment implements BestThingsTodoAd
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         mRootview = inflater.inflate(R.layout.fragment_best_things_todo, container, false);
 
-        ((AppCompatActivity) getActivity()).getSupportActionBar().setDisplayShowHomeEnabled(true);
-        ((AppCompatActivity) getActivity()).getSupportActionBar().setHomeButtonEnabled(true);
+//        ((AppCompatActivity) getActivity()).getSupportActionBar().setDisplayShowHomeEnabled(true);
+//        ((AppCompatActivity) getActivity()).getSupportActionBar().setHomeButtonEnabled(true);
 
         mRecyclerView = mRootview.findViewById(R.id.best_things_recycler_view);
         errorTextView = mRootview.findViewById(R.id.tv_error_message_display);
@@ -122,15 +122,13 @@ public class bestThingsTodoFragment extends Fragment implements BestThingsTodoAd
         mRecyclerView.setAdapter(bestThingsTodoAdapter);
     }
 
-    @Override
-    public void onStart() {
-        super.onStart();
-
-        nestedScrollView = ((MainActivity) getActivity()).nestedScrollView;
-        nestedScrollView.setNestedScrollingEnabled(false);
-        appBarLayout = ((MainActivity) getActivity()).appBarLayout;
-        appBarLayout.setExpanded(false);
-
+     @Override
+     public void onResume() {
+        super.onResume();
+        Log.d(TAG, "OnResume");
+        ((MainActivity) getContext()).lockAppBarClosed();
+        nestedScrollView = ((MainActivity)getActivity()).nestedScrollView;
+         nestedScrollView.setScrollY(0);
     }
 
     @Override

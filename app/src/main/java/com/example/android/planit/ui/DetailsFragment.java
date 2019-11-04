@@ -21,6 +21,7 @@ import androidx.activity.OnBackPressedCallback;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
+import androidx.appcompat.widget.Toolbar;
 import androidx.core.content.res.ResourcesCompat;
 import androidx.core.widget.NestedScrollView;
 import androidx.databinding.DataBindingUtil;
@@ -28,14 +29,12 @@ import androidx.fragment.app.Fragment;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.Observer;
 import androidx.navigation.Navigation;
-import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.transition.TransitionInflater;
 
 import com.example.android.planit.Constants;
 import com.example.android.planit.R;
-import com.example.android.planit.adapters.PopularDestinationsAdapter;
 import com.example.android.planit.adapters.ReviewsAdapter;
 import com.example.android.planit.database.AppDatabase;
 import com.example.android.planit.databinding.FragmentDetailsBinding;
@@ -51,8 +50,10 @@ import com.example.android.planit.utils.AppExecutors;
 import com.example.android.planit.utils.NetworkUtils;
 import com.example.android.planit.utils.SpacesItemDecoration;
 import com.google.android.material.appbar.AppBarLayout;
+import com.google.android.material.appbar.CollapsingToolbarLayout;
 import com.leinardi.android.speeddial.SpeedDialActionItem;
 import com.leinardi.android.speeddial.SpeedDialView;
+import com.prolificinteractive.materialcalendarview.CalendarDay;
 import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
@@ -76,7 +77,7 @@ public class DetailsFragment extends Fragment implements DatePickerDialog.OnDate
     private int year;
     private int month;
     private int day;
-
+    boolean isFound = false;
 //    private String city;
     private String placeId;
     private String poi_name;
@@ -84,6 +85,7 @@ public class DetailsFragment extends Fragment implements DatePickerDialog.OnDate
     private String photoRef;
     private int photoWidth;
 
+    private ArrayList<MyCalendar> calendarEntries;
     private ArrayList<BucketList> mBucketLists;
     private ArrayList<String> mBucketListsName;
 
@@ -99,6 +101,13 @@ public class DetailsFragment extends Fragment implements DatePickerDialog.OnDate
     private FragmentDetailsBinding binding;
     private ImageView header;
     private RecyclerView recyclerView;
+    private AppBarLayout appBarLayout;
+    private Toolbar toolbar;
+    private SpeedDialView speedDialView;
+
+    private boolean isShow = false;
+    private int scrollRange = -1;
+    private boolean isPause = false;
 
     public DetailsFragment() {
         // Required empty public constructor
@@ -142,10 +151,54 @@ public class DetailsFragment extends Fragment implements DatePickerDialog.OnDate
     @Override
     public void onStart() {
         super.onStart();
-        NestedScrollView nestedScrollView = ((MainActivity) getActivity()).nestedScrollView;
-        nestedScrollView.setNestedScrollingEnabled(true);
-        AppBarLayout appBarLayout = ((MainActivity) getActivity()).appBarLayout;
-        appBarLayout.setExpanded(true);
+        appBarLayout = ((MainActivity) getActivity()).appBarLayout;
+        toolbar = ((MainActivity) getActivity()).toolbar;
+        ((MainActivity) getContext()).unlockAppBarOpen();
+        appBarLayout.addOnOffsetChangedListener((appBarLayout, verticalOffset) -> {
+            if (scrollRange == -1) {
+                scrollRange = appBarLayout.getTotalScrollRange();
+            }
+            if (!isPause) {
+                if ((Math.abs(scrollRange + verticalOffset) < 20)) {
+                    Log.d(TAG, "OnStart setting title");
+                    toolbar.setTitle("PlanIt");
+                    isShow = true;
+                } else if (isShow) {
+                    Log.d(TAG, "OnStart removing title");
+                    toolbar.setTitle("");
+                    isShow = false;
+                }
+            }
+        });
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        Log.d(TAG, "OnResume");
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        Log.d(TAG, "OnPause");
+        isPause = true;
+        header.setImageDrawable(null);
+        speedDialView.setVisibility(View.GONE);
+    }
+
+//    @Override
+//    public void onPau() {
+//        super.onStop();
+//        toolbar.setTitle("");
+//    }
+
+
+    @Override
+    public void onStop() {
+        super.onStop();
+        Log.d(TAG, "OnStop");
+//        toolbar.setTitle("PlanIt");
     }
 
     @Override
@@ -170,8 +223,10 @@ public class DetailsFragment extends Fragment implements DatePickerDialog.OnDate
 
         binding.addressLayout.setClickable(false);
         binding.addressLayout.setOnClickListener(v -> {
-            Intent intent = new Intent(Intent.ACTION_VIEW,
-                    Uri.parse("google.navigation:q="+placeDetails.getAddress()));
+            Uri uri = Uri.parse("google.navigation:q="+placeDetails.getAddress());
+            Intent mapIntent = new Intent(Intent.ACTION_VIEW, uri);
+            mapIntent.setPackage("com.google.android.apps.maps");
+            startActivity(mapIntent);
         });
 
         binding.phoneLayout.setClickable(false);
@@ -181,7 +236,10 @@ public class DetailsFragment extends Fragment implements DatePickerDialog.OnDate
             startActivity(callIntent);
         });
 
-        binding.speedDial.addActionItem(
+        speedDialView = ((MainActivity) getActivity()).speedDialView;
+        speedDialView.setExpansionMode(SpeedDialView.ExpansionMode.BOTTOM);
+        speedDialView.setVisibility(View.VISIBLE);
+        speedDialView.addActionItem(
                 new SpeedDialActionItem.Builder(R.id.AddToCalendar, R.drawable.calendar_icon_fab)
                         .setLabel(getString(R.string.add_to_calendar))
                         .setLabelColor(Color.WHITE)
@@ -191,7 +249,7 @@ public class DetailsFragment extends Fragment implements DatePickerDialog.OnDate
                         .create()
         );
 
-        binding.speedDial.addActionItem(
+        speedDialView.addActionItem(
                 new SpeedDialActionItem.Builder(R.id.AddToBucketList, R.drawable.add_bucket_icon)
                         .setLabel(getString(R.string.add_to_bucketList))
                         .setLabelColor(Color.WHITE)
@@ -201,7 +259,7 @@ public class DetailsFragment extends Fragment implements DatePickerDialog.OnDate
                         .create()
         );
 
-        binding.speedDial.setOnActionSelectedListener(new SpeedDialView.OnActionSelectedListener() {
+        speedDialView.setOnActionSelectedListener(new SpeedDialView.OnActionSelectedListener() {
             @Override
             public boolean onActionSelected(SpeedDialActionItem speedDialActionItem) {
                 switch (speedDialActionItem.getId()) {
@@ -244,6 +302,7 @@ public class DetailsFragment extends Fragment implements DatePickerDialog.OnDate
                 });
 
         retrieveBucketLists();
+        retrieveCalendarEntries();
         loadDetails();
     }
 
@@ -296,9 +355,21 @@ public class DetailsFragment extends Fragment implements DatePickerDialog.OnDate
             binding.poiName.setText(placeDetails.getName());
         }
 
-        if (placeDetails.getOpeningHours().getOpenNow() != null) {
-            if (placeDetails.getOpeningHours().getOpenNow()) {
-                binding.openNowValue.setText(getActivity().getString(R.string.open));
+        if (placeDetails.getOpeningHours() != null) {
+            if (placeDetails.getOpeningHours().getOpenNow() != null) {
+                if (placeDetails.getOpeningHours().getOpenNow()) {
+                    binding.openNowValue.setText(getActivity().getString(R.string.open));
+                }
+            }
+
+            if (placeDetails.getOpeningHours().getWeekdayHours() != null) {
+                binding.mondayOpeningHoursTv.setText(placeDetails.getOpeningHours().getWeekdayHours().get(0));
+                binding.tuesdayOpeningHoursTv.setText(placeDetails.getOpeningHours().getWeekdayHours().get(1));
+                binding.wednesdayOpeningHoursTv.setText(placeDetails.getOpeningHours().getWeekdayHours().get(2));
+                binding.thursdayOpeningHoursTv.setText(placeDetails.getOpeningHours().getWeekdayHours().get(3));
+                binding.fridayOpeningHoursTv.setText(placeDetails.getOpeningHours().getWeekdayHours().get(4));
+                binding.saturdayOpeningHoursTv.setText(placeDetails.getOpeningHours().getWeekdayHours().get(5));
+                binding.sundayOpeningHoursTv.setText(placeDetails.getOpeningHours().getWeekdayHours().get(6));
             }
         }
 
@@ -316,15 +387,6 @@ public class DetailsFragment extends Fragment implements DatePickerDialog.OnDate
             binding.phoneLayout.setClickable(true);
         }
 
-        if (placeDetails.getOpeningHours().getWeekdayHours() != null) {
-            binding.mondayOpeningHoursTv.setText(placeDetails.getOpeningHours().getWeekdayHours().get(0));
-            binding.tuesdayOpeningHoursTv.setText(placeDetails.getOpeningHours().getWeekdayHours().get(1));
-            binding.wednesdayOpeningHoursTv.setText(placeDetails.getOpeningHours().getWeekdayHours().get(2));
-            binding.thursdayOpeningHoursTv.setText(placeDetails.getOpeningHours().getWeekdayHours().get(3));
-            binding.fridayOpeningHoursTv.setText(placeDetails.getOpeningHours().getWeekdayHours().get(4));
-            binding.saturdayOpeningHoursTv.setText(placeDetails.getOpeningHours().getWeekdayHours().get(5));
-            binding.sundayOpeningHoursTv.setText(placeDetails.getOpeningHours().getWeekdayHours().get(6));
-        }
 
         if (placeDetails.getPlaceReviews() != null) {
             mAdapter.setData(placeDetails.getPlaceReviews());
@@ -346,6 +408,21 @@ public class DetailsFragment extends Fragment implements DatePickerDialog.OnDate
                     for (int i = 0; i<mBucketLists.size(); i++) {
                         mBucketListsName.add(mBucketLists.get(i).getName());
                     }
+                }
+            }
+        });
+    }
+
+    private void retrieveCalendarEntries() {
+        Log.d(TAG, "Actively retrieving the Entries from the DataBase");
+        LiveData<List<MyCalendar>> entries = mDb.myCalendarDao().loadAllCalendarEntries();
+
+        entries.observe(this, new Observer<List<MyCalendar>>() {
+            @Override
+            public void onChanged(@Nullable List<MyCalendar> entries) {
+                Log.d(TAG, "Receiving database update from LiveData");
+                if (entries.size() > 0) {
+                    calendarEntries = (ArrayList) entries;
                 }
             }
         });
@@ -374,12 +451,53 @@ public class DetailsFragment extends Fragment implements DatePickerDialog.OnDate
         AlertDialog dialog = builder.create();
         dialog.show();
     }
+
     private void addToCalendar(int year, int month, int dayOfMonth) {
         AppExecutors.getInstance().diskIO().execute(new Runnable() {
             @Override
             public void run() {
-                MyCalendar calendar = new MyCalendar(year, month, dayOfMonth, poi_name);
-                mDb.myCalendarDao().insertCalendarEntry(calendar);
+                PointOfInterestPhoto photo = new PointOfInterestPhoto(photoRef, photoWidth);
+                ArrayList<PointOfInterestPhoto> pointsOfInterestsPhotoArrayList = new ArrayList<>();
+                pointsOfInterestsPhotoArrayList.add(photo);
+
+                PointsOfInterests item = new PointsOfInterests(poi_name, placeId, pointsOfInterestsPhotoArrayList);
+                ArrayList<PointsOfInterests> pointsOfInterestsArrayList = new ArrayList<>();
+                pointsOfInterestsArrayList.add(item);
+
+                BucketListItem bucketListItem = new BucketListItem(pointsOfInterestsArrayList);
+                ArrayList<BucketListItem> items = new ArrayList<>();
+                items.add(bucketListItem);
+                CalendarDay date = CalendarDay.from(year, month, dayOfMonth);
+                MyCalendar calendar = new MyCalendar(year, month, dayOfMonth,date, items);
+                long result = mDb.myCalendarDao().insertCalendarEntry(calendar);
+
+                if (result == -1) {
+                    CalendarDay calendardate = CalendarDay.from(year, month, dayOfMonth);
+                    CalendarDay eventDate;
+                    for (int i = 0; i< calendarEntries.size(); i++) {
+                        eventDate = CalendarDay.from(calendarEntries.get(i).getYear(),
+                                calendarEntries.get(i).getMonth(),
+                                calendarEntries.get(i).getDay());
+
+                        if (eventDate.equals(calendardate)) {
+                            items = calendarEntries.get(i).getItems();
+                        }
+                    }
+                    for (int i =0; i < items.size(); i++) {
+                        if (items.get(i).getActivities().get(0).getName().equals(bucketListItem.getActivities().get(0).getName())) {
+                            isFound = true;
+                        }
+                    }
+                    if (isFound) {
+                        Toast.makeText(getActivity(), "Item already added on this date", Toast.LENGTH_SHORT).show();
+                        isFound = false;
+                    } else {
+                        items.add(bucketListItem);
+                        calendar.setItems(items);
+                        mDb.myCalendarDao().updateaCalendarEntry(calendar);
+                    }
+
+                }
             }
         });
     }
@@ -432,4 +550,5 @@ public class DetailsFragment extends Fragment implements DatePickerDialog.OnDate
     public void onClick(int position) {
         /*Reviews*/
     }
+
 }

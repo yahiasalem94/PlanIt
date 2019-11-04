@@ -23,61 +23,6 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
-        <LinearLayout
-            android:id="@+id/departure_date_layout"
-            android:layout_width="@dimen/date_layout_width"
-            android:layout_height="wrap_content"
-            android:layout_marginLeft="@dimen/date_layout_margin_left_right"
-            android:layout_marginTop="@dimen/departure_arrival_date_tv_top_margin"
-            android:orientation="horizontal"
-            app:layout_constraintEnd_toStartOf="@+id/arrival_date_layout"
-            app:layout_constraintHorizontal_bias="@dimen/constraint_horizontal_bias"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/simpleSearchView">
-
-            <TextView
-                android:id="@+id/departure_date"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/departure_date" />
-
-            <ImageView
-                android:id="@+id/imageView"
-                android:layout_width="@dimen/calendar_iv_width"
-                android:layout_height="@dimen/calendar_iv_height"
-                android:layout_marginLeft="@dimen/calendar_iv_margin_left"
-                app:srcCompat="@drawable/calendar" />
-
-
-        </LinearLayout>
-
-        <LinearLayout
-            android:id="@+id/arrival_date_layout"
-            android:layout_width="@dimen/date_layout_width"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/departure_arrival_date_tv_top_margin"
-            android:layout_marginRight="@dimen/date_layout_margin_left_right"
-            android:orientation="horizontal"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toEndOf="@+id/departure_date_layout"
-            app:layout_constraintTop_toBottomOf="@+id/simpleSearchView">
-
-            <TextView
-                android:id="@+id/arrival_date"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginLeft="@dimen/arrival_date_margin_left"
-                android:text="@string/arrival_date" />
-
-            <ImageView
-                android:id="@+id/imageView2"
-                android:layout_width="@dimen/calendar_iv_width"
-                android:layout_height="@dimen/calendar_iv_height"
-                android:layout_marginLeft="20dp"
-                app:srcCompat="@drawable/calendar" />
-
-        </LinearLayout>
-
         <Button
             android:id="@+id/search_button"
             android:layout_width="@dimen/search_view_and_button_width"
@@ -98,7 +43,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             app:layout_constraintTop_toBottomOf="@+id/search_button"
-            android:layout_marginTop="40dp"
+            android:layout_marginTop="48dp"
             android:clipToPadding="false"
             app:layout_behavior="@string/appbar_scrolling_view_behavior"
             android:scrollbarStyle="outsideOverlay"
