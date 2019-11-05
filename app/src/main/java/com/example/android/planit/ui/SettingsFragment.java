@@ -12,6 +12,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.navigation.Navigation;
 import androidx.preference.ListPreference;
 import androidx.preference.PreferenceFragmentCompat;
+import androidx.preference.PreferenceManager;
 
 import com.example.android.planit.R;
 import com.example.android.planit.utils.LocaleManager;
@@ -73,7 +74,16 @@ public class SettingsFragment extends PreferenceFragmentCompat implements Shared
 
         private void setListSummary(String key) {
             ListPreference pref = findPreference(key);
-            pref.setSummary(pref.getEntry());
+
+            if(pref.getValue()==null) {
+                // to ensure we don't get a null value
+                // set first value by default
+                LocaleManager.setNewLocale(getActivity(), LocaleManager.ENGLISH);
+                pref.setValue(english);
+            }
+
+
+                pref.setSummary(pref.getEntry());
         }
 
         private void setNewLocale(AppCompatActivity mContext, @LocaleManager.LocaleDef String language) {

@@ -15,6 +15,7 @@ import com.example.android.planit.R;
 import com.example.android.planit.models.BucketList;
 
 import java.util.ArrayList;
+import java.util.Random;
 
 public class BucketListAdapter extends RecyclerView.Adapter<BucketListAdapterViewHolder> {
 
@@ -22,7 +23,7 @@ public class BucketListAdapter extends RecyclerView.Adapter<BucketListAdapterVie
     private final BucketListAdapterOnClickHandler mClickHandler;
     private Context context;
     private NavController navController;
-
+    private static ArrayList<Integer>cardColors;
 
     public interface BucketListAdapterOnClickHandler {
         void onClick(int position);
@@ -32,6 +33,7 @@ public class BucketListAdapter extends RecyclerView.Adapter<BucketListAdapterVie
     public BucketListAdapter(BucketListAdapterOnClickHandler clickHandler, Context context) {
         mClickHandler = clickHandler;
         this.context = context;
+        cardColors = new ArrayList<>();
     }
 
     @Override
@@ -45,6 +47,12 @@ public class BucketListAdapter extends RecyclerView.Adapter<BucketListAdapterVie
 
     @Override
     public void onBindViewHolder(final BucketListAdapterViewHolder adapterViewHolder, int position) {
+        if (cardColors.size()-1 >= position) {
+            adapterViewHolder.mBucketListCardView.setCardBackgroundColor(cardColors.get(position));
+        } else {
+            getColor();
+            adapterViewHolder.mBucketListCardView.setCardBackgroundColor(cardColors.get(position));
+        }
         adapterViewHolder.mBucketListName.setText(mBucketListData.get(position).getName());
 
     }
@@ -72,5 +80,11 @@ public class BucketListAdapter extends RecyclerView.Adapter<BucketListAdapterVie
     public void setBucketListsData(ArrayList<BucketList> bucketListData) {
         mBucketListData = bucketListData;
         notifyDataSetChanged();
+    }
+
+    private void getColor() {
+        int[] androidColors = context.getResources().getIntArray(R.array.androidcolors);
+        int randomAndroidColor = androidColors[new Random().nextInt(androidColors.length)];
+        cardColors.add(randomAndroidColor);
     }
 }
