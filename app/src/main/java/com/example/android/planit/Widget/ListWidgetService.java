@@ -9,6 +9,7 @@ import android.widget.RemoteViewsService;
 import com.example.android.planit.R;
 import com.example.android.planit.database.AppDatabase;
 import com.example.android.planit.models.BucketList;
+import com.example.android.planit.ui.BucketListFragment;
 
 import java.util.ArrayList;
 
@@ -80,9 +81,7 @@ class ListRemoteViewsFactory implements RemoteViewsService.RemoteViewsFactory {
 
         // Fill in the onClick PendingIntent Template using the specific info for each item individually
         Bundle extras = new Bundle();
-//        extras.putString(Constants.RECIPE_NAME, SharedPreferenceUtil.getRecipeNameFromSharedPrefsForKey(Constants.ADDED_RECIPE_NAME, mContext.getApplicationContext()));
-//        extras.putParcelableArrayList(Constants.STEPS_LIST, SharedPreferenceUtil.getRecipeStepsFromSharedPrefsForKey(Constants.ADDED_STEPS, mContext.getApplicationContext()));
-//        extras.putParcelableArrayList(Constants.INGREDIENTS_LIST, SharedPreferenceUtil.getIngredientsFromSharedPrefsForKey(Constants.ADDED_INGREDIENT, mContext.getApplicationContext()));
+        extras.putString(BucketListFragment.BUCKET_LIST_NAME, mBuckets.get(position).getName());
         Intent fillInIntent = new Intent();
         fillInIntent.putExtras(extras);
         views.setOnClickFillInIntent(R.id.widget_linear_layout, fillInIntent);

@@ -15,4 +15,17 @@
         app:layout_behavior="@string/appbar_scrolling_view_behavior"
         android:scrollbarStyle="outsideOverlay" />
 
+    <TextView
+        android:id="@+id/tv_error_message_display"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:padding="@dimen/error_message_padding"
+        android:text="@string/bucket_items_error_message"
+        android:textSize="@dimen/error_message_textsize"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        android:visibility="invisible" />
+
 </androidx.constraintlayout.widget.ConstraintLayout>

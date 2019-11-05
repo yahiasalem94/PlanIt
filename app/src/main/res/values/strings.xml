@@ -22,6 +22,8 @@
     <string name="error_message">Can\'t receive data at the moment</string>
     <string name="no_connection">No Internet Connection</string>
 
+    <string name="bucket_items_error_message">No items added in the bucket list</string>
+
     <string name="opening_hours">Opening Hours</string>
     <string name="open">Open</string>
     <string name="open_now">Open Now</string>
@@ -52,4 +54,5 @@
     <string name="empty_bucketlist">Bucket list is empty</string>
     <string name="undo">UNDO</string>
     <string name="item_removed">Item was removed from the list.</string>
+    <string name="bucket_list">BucketLists</string>
 </resources>

@@ -8,7 +8,7 @@
                 android:entryValues="@array/settings_list_preference_values"
                 android:key="@string/language_preference"
                 android:summary="Click to show a language list to choose from"
-                android:title="List Preference" />
+                android:title="Language" />
     </androidx.preference.PreferenceCategory>
 
 </androidx.preference.PreferenceScreen>

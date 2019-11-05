@@ -88,6 +88,11 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
         speedDialView = findViewById(R.id.speedDial);
 
         setupNavigation();
+        if (getIntent().getExtras() != null) {
+            if (getIntent().getExtras().containsKey(BucketListFragment.BUCKET_LIST_NAME)) {
+                navController.navigate(R.id.bucketListItemsFragment, getIntent().getExtras());
+            }
+        }
     }
 
     @Override

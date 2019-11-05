@@ -53,7 +53,7 @@ public class BucketListItemsFragment extends Fragment implements BucketListItems
     /* Views */
     private View mRootView;
     private RecyclerView recyclerView;
-    private RecyclerView mRecyclerView;
+    private TextView mErrorTv;
     private AppBarLayout appBarLayout;
     private NestedScrollView nestedScrollView;
     private ConstraintLayout constraintLayout;
@@ -86,6 +86,7 @@ public class BucketListItemsFragment extends Fragment implements BucketListItems
         mRootView = inflater.inflate(R.layout.fragment_bucket_list_items, container, false);
         recyclerView = mRootView.findViewById(R.id.recycler_view);
         constraintLayout = mRootView.findViewById(R.id.constraintLayout);
+        mErrorTv = mRootView.findViewById(R.id.tv_error_message_display);
 
         setupRecyclerView();
         enableSwipeToDeleteAndUndo();
@@ -177,9 +178,13 @@ public class BucketListItemsFragment extends Fragment implements BucketListItems
                 if (bucketList != null) {
                     Log.d(TAG, "bucketlist is not null");
                     Log.d(TAG, bucketList.getName());
-                    Log.d(TAG, bucketList.getItems().size() + "");
-                    mBucketList = bucketList;
-                    mBucketListItemAdapter.setData(bucketList.getItems());
+                    if (bucketList.getItems().size() > 0) {
+                        Log.d(TAG, bucketList.getItems().size() + "");
+                        mBucketList = bucketList;
+                        mBucketListItemAdapter.setData(bucketList.getItems());
+                    } else {
+                        mErrorTv.setVisibility(View.VISIBLE);
+                    }
                 }
             }
         });
