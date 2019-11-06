@@ -43,11 +43,16 @@ public class NearbyAdapter extends RecyclerView.Adapter<NearbyAdapterViewHolder>
 
     @Override
     public void onBindViewHolder(NearbyAdapterViewHolder adapterViewHolder, int position) {
-        Picasso.get()
-                .load(NetworkUtils.buildGooglePhotoUrl(/*mPoiData.get(position).getPhoto().get(0).getWidth()*/200, mPoiData.get(position).getPhoto().get(0).getPhotoReference()))
-                /* TODO Change place holder */
-                .placeholder(R.drawable.home_icon)
-                .into(adapterViewHolder.mPoiPhoto);
+        if (mPoiData.get(position).getPhoto() != null) {
+            Picasso.get()
+                    .load(NetworkUtils.buildGooglePhotoUrl(/*mPoiData.get(position).getPhoto().get(0).getWidth()*/200,
+                            mPoiData.get(position).getPhoto().get(0).getPhotoReference()))
+                    /* TODO Change place holder */
+                    .placeholder(R.drawable.home_icon)
+                    .into(adapterViewHolder.mPoiPhoto);
+        } else {
+            adapterViewHolder.mPoiPhoto.setImageResource(R.drawable.home_icon);
+        }
         adapterViewHolder.mNameOfPoi.setText(mPoiData.get(position).getName());
         adapterViewHolder.mPoiPhoto.setAdjustViewBounds(true);
     }

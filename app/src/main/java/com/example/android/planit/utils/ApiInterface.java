@@ -17,7 +17,8 @@ public interface ApiInterface {
     Call<PlaceDetailsResponse> getPlaceDetails(@Query("placeid") String placeId, @Query("key") String apiKey);
 
     @GET("api/place/nearbysearch/json")
-    Call<PointsOfInterestsResponse> getNearbyPlaces(@Query("location") String location, @Query("rankby") String rankBy, @Query("key") String apiKey);
+    Call<PointsOfInterestsResponse> getNearbyPlaces(@Query("location") String location, @Query("type") String type,
+                                                    @Query("rankby") String rankBy, @Query("key") String apiKey);
 
 //    @GET("api/place/photo")
 //    Call<PlaceResponse> getThingsTodoInCity(@Query("photoreference") String photoReference, @Query("key") String apiKey);
