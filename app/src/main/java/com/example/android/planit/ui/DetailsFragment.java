@@ -125,7 +125,7 @@ public class DetailsFragment extends Fragment implements DatePickerDialog.OnDate
         mBucketLists = new ArrayList<>();
         mBucketListsName = new ArrayList<>();
 
-        if (getArguments() != null /*&& getArguments().containsKey(HomeFragment.CITY_NAME)*/
+        if (getArguments() != null
                 && getArguments().containsKey(bestThingsTodoFragment.PLACE_ID)
                 && getArguments().containsKey(bestThingsTodoFragment.POI_NAME)
                 && getArguments().containsKey(bestThingsTodoFragment.PHOTO_REF)
@@ -495,6 +495,7 @@ public class DetailsFragment extends Fragment implements DatePickerDialog.OnDate
                         items.add(bucketListItem);
                         calendar.setItems(items);
                         mDb.myCalendarDao().updateaCalendarEntry(calendar);
+                        Toast.makeText(getActivity(), "Item added to calendar", Toast.LENGTH_SHORT).show();
                     }
 
                 }

@@ -127,7 +127,7 @@ public class BucketListItemsFragment extends Fragment implements BucketListItems
 
                 mBucketListItemAdapter.removeItem(position);
 
-                Snackbar snackbar = Snackbar.make(constraintLayout, getActivity().getString(R.string.item_removed), Snackbar.LENGTH_LONG);
+                Snackbar snackbar = Snackbar.make(constraintLayout, getActivity().getString(R.string.item_removed), Snackbar.LENGTH_SHORT);
                 snackbar.setAction(getActivity().getString(R.string.undo), new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {

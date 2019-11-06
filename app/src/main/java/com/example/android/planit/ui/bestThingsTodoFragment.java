@@ -128,7 +128,7 @@ public class bestThingsTodoFragment extends Fragment implements BestThingsTodoAd
         Log.d(TAG, "OnResume");
         ((MainActivity) getContext()).lockAppBarClosed();
         nestedScrollView = ((MainActivity)getActivity()).nestedScrollView;
-         nestedScrollView.setScrollY(0);
+        nestedScrollView.setScrollY(0);
     }
 
     @Override
@@ -186,7 +186,6 @@ public class bestThingsTodoFragment extends Fragment implements BestThingsTodoAd
     @Override
     public void onClick(View view, int position) {
         Bundle bundle = new Bundle();
-        bundle.putString(HomeFragment.CITY_NAME, city);
         bundle.putString(PLACE_ID, pois.get(position).getPlaceId());
         bundle.putString(POI_NAME, pois.get(position).getName());
         bundle.putString(PHOTO_REF, pois.get(position).getPhoto().get(0).getPhotoReference());
