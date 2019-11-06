@@ -21,7 +21,9 @@ import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 import androidx.fragment.app.Fragment;
+import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
+import androidx.navigation.fragment.FragmentNavigator;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -62,7 +64,6 @@ public class NearByFragment extends Fragment implements NearbyAdapter.NearbyAdap
     private ProgressBar mProgressBar;
     private TextView errorTextView;
     private RecyclerView mRecyclerView;
-    private AppBarLayout appBarLayout;
 
     /* Retrofit */
     private ApiInterface apiService;
@@ -71,7 +72,9 @@ public class NearByFragment extends Fragment implements NearbyAdapter.NearbyAdap
     private LinearLayoutManager layoutManager;
     private ArrayList<PointsOfInterests> pois;
     private NearbyAdapter nearbyAdapter;
-    private String lastLocation;
+
+    /* Navigation */
+    private NavController navController;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -85,7 +88,7 @@ public class NearByFragment extends Fragment implements NearbyAdapter.NearbyAdap
         //we will store this in a global list to access later.
 
         apiService = NetworkUtils.getRetrofitInstance(getActivity()).create(ApiInterface.class);
-
+        navController = Navigation.findNavController(getActivity(), R.id.nav_host_fragment);
         nearbyAdapter = new NearbyAdapter(this, getActivity());
     }
 
@@ -114,13 +117,19 @@ public class NearByFragment extends Fragment implements NearbyAdapter.NearbyAdap
             } else {
                 locationTrack = new LocationTrack(getActivity());
                 if (locationTrack.canGetLocation()) {
-                    loadData(lastLocation, locationTrack.getLatitude()+"", locationTrack.getLongitude()+"");
+                    loadData(locationTrack.getLatitude()+"", locationTrack.getLongitude()+"");
                     Log.d(TAG, locationTrack.getLatitude()+"" + " " + locationTrack.getLongitude()+"");
                 } else {
                     locationTrack.showSettingsAlert();
                 }
             }
         }
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        ((MainActivity) getContext()).lockAppBarClosed();
     }
 
     @Override
@@ -203,7 +212,7 @@ public class NearByFragment extends Fragment implements NearbyAdapter.NearbyAdap
                 } else {
                     locationTrack = new LocationTrack(getActivity());
                     if (locationTrack.canGetLocation()) {
-                        loadData(lastLocation, locationTrack.getLatitude()+"", locationTrack.getLongitude()+"");
+                        loadData(locationTrack.getLatitude()+"", locationTrack.getLongitude()+"");
                         Log.d(TAG, locationTrack.getLatitude()+"" + " " + locationTrack.getLongitude()+"");
                     } else {
                         locationTrack.showSettingsAlert();
@@ -230,13 +239,21 @@ public class NearByFragment extends Fragment implements NearbyAdapter.NearbyAdap
 
     @Override
     public void onClick(View view, int position) {
+        Bundle bundle = new Bundle();
+        bundle.putString(bestThingsTodoFragment.PLACE_ID, pois.get(position).getPlaceId());
+        bundle.putString(bestThingsTodoFragment.POI_NAME, pois.get(position).getName());
+        bundle.putString(bestThingsTodoFragment.PHOTO_REF, pois.get(position).getPhoto().get(0).getPhotoReference());
+        bundle.putInt(bestThingsTodoFragment.PHOTO_WIDTH, pois.get(position).getPhoto().get(0).getWidth());
 
+
+        FragmentNavigator.Extras extras = new FragmentNavigator.Extras.Builder()
+                .addSharedElement(view, String.valueOf(R.string.transition_image)).build();
+        navController.navigate(R.id.detailsFragment, bundle,null, extras);
     }
 
     /* Pulling data from server */
-    private void loadData(String location, String latitude, String Longitude) {
+    private void loadData(String latitude, String Longitude) {
         mProgressBar.setVisibility(View.VISIBLE);
-        Log.d(TAG, "Load data with location:"+" "+location);
         Call<PointsOfInterestsResponse> call = apiService.getNearbyPlaces(latitude+","+Longitude, Constants.GOOGLE_TYPE,
                 Constants.GOOGLE_RANKBY, Constants.GOOGLE_API_KEY);
         call.enqueue(new Callback<PointsOfInterestsResponse>() {
