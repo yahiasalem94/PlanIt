@@ -58,6 +58,7 @@ public class bestThingsTodoFragment extends Fragment implements BestThingsTodoAd
     private RecyclerView mRecyclerView;
     private AppBarLayout appBarLayout;
     private NestedScrollView nestedScrollView;
+    private ImageView header;
 
     /* Retrofit */
     private ApiInterface apiService;
@@ -126,6 +127,8 @@ public class bestThingsTodoFragment extends Fragment implements BestThingsTodoAd
      public void onResume() {
         super.onResume();
         Log.d(TAG, "OnResume");
+        header = ((MainActivity) getActivity()).imageView;
+        header.setImageDrawable(null);
         ((MainActivity) getContext()).lockAppBarClosed();
         nestedScrollView = ((MainActivity)getActivity()).nestedScrollView;
         nestedScrollView.setScrollY(0);

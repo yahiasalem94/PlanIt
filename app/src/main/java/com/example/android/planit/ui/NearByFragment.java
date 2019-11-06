@@ -11,6 +11,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
@@ -64,6 +65,7 @@ public class NearByFragment extends Fragment implements NearbyAdapter.NearbyAdap
     private ProgressBar mProgressBar;
     private TextView errorTextView;
     private RecyclerView mRecyclerView;
+    private ImageView header;
 
     /* Retrofit */
     private ApiInterface apiService;
@@ -129,6 +131,8 @@ public class NearByFragment extends Fragment implements NearbyAdapter.NearbyAdap
     @Override
     public void onResume() {
         super.onResume();
+        header = ((MainActivity) getActivity()).imageView;
+        header.setImageDrawable(null);
         ((MainActivity) getContext()).lockAppBarClosed();
     }
 

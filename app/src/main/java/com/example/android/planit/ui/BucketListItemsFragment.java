@@ -3,6 +3,7 @@ package com.example.android.planit.ui;
 
 import android.content.Context;
 import android.graphics.Color;
+import android.media.Image;
 import android.os.Bundle;
 
 import androidx.activity.OnBackPressedCallback;
@@ -24,6 +25,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -55,7 +57,7 @@ public class BucketListItemsFragment extends Fragment implements BucketListItems
     private RecyclerView recyclerView;
     private TextView mErrorTv;
     private AppBarLayout appBarLayout;
-    private NestedScrollView nestedScrollView;
+    private ImageView header;
     private ConstraintLayout constraintLayout;
 
     private LinearLayoutManager linearLayoutManager;
@@ -109,6 +111,8 @@ public class BucketListItemsFragment extends Fragment implements BucketListItems
     @Override
     public void onResume() {
         super.onResume();
+        header = ((MainActivity) getActivity()).imageView;
+        header.setImageDrawable(null);
         ((MainActivity) getContext()).lockAppBarClosed();
     }
 

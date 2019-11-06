@@ -8,6 +8,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 
 import androidx.activity.OnBackPressedCallback;
 import androidx.annotation.NonNull;
@@ -52,9 +53,7 @@ public class CalendarItems extends Fragment implements BucketListItemsAdapter.Bu
     /* Views */
     private View mRootView;
     private RecyclerView recyclerView;
-    private RecyclerView mRecyclerView;
-    private AppBarLayout appBarLayout;
-    private NestedScrollView nestedScrollView;
+    private ImageView header;
     private ConstraintLayout constraintLayout;
 
     private LinearLayoutManager linearLayoutManager;
@@ -110,6 +109,8 @@ public class CalendarItems extends Fragment implements BucketListItemsAdapter.Bu
     @Override
     public void onResume() {
         super.onResume();
+        header = ((MainActivity) getActivity()).imageView;
+        header.setImageDrawable(null);
         ((MainActivity) getContext()).lockAppBarClosed();
     }
 

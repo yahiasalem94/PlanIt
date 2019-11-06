@@ -48,10 +48,11 @@ public class NearbyAdapter extends RecyclerView.Adapter<NearbyAdapterViewHolder>
                     .load(NetworkUtils.buildGooglePhotoUrl(/*mPoiData.get(position).getPhoto().get(0).getWidth()*/200,
                             mPoiData.get(position).getPhoto().get(0).getPhotoReference()))
                     /* TODO Change place holder */
-                    .placeholder(R.drawable.home_icon)
+                    .placeholder(R.drawable.no_image)
+                    .error(R.drawable.no_image)
                     .into(adapterViewHolder.mPoiPhoto);
         } else {
-            adapterViewHolder.mPoiPhoto.setImageResource(R.drawable.home_icon);
+            adapterViewHolder.mPoiPhoto.setImageResource(R.drawable.no_image);
         }
         adapterViewHolder.mNameOfPoi.setText(mPoiData.get(position).getName());
         adapterViewHolder.mPoiPhoto.setAdjustViewBounds(true);

@@ -144,8 +144,8 @@ public class DetailsFragment extends Fragment implements DatePickerDialog.OnDate
 
         mAdapter = new ReviewsAdapter(this, getActivity());
 
-        setSharedElementEnterTransition(TransitionInflater.from(getContext()).inflateTransition(android.R.transition.move));
-        postponeEnterTransition();
+//        setSharedElementEnterTransition(TransitionInflater.from(getContext()).inflateTransition(android.R.transition.move));
+//        postponeEnterTransition();
     }
 
     @Override
@@ -183,22 +183,7 @@ public class DetailsFragment extends Fragment implements DatePickerDialog.OnDate
         super.onPause();
         Log.d(TAG, "OnPause");
         isPause = true;
-        header.setImageDrawable(null);
         speedDialView.setVisibility(View.GONE);
-    }
-
-//    @Override
-//    public void onPau() {
-//        super.onStop();
-//        toolbar.setTitle("");
-//    }
-
-
-    @Override
-    public void onStop() {
-        super.onStop();
-        Log.d(TAG, "OnStop");
-//        toolbar.setTitle("PlanIt");
     }
 
     @Override
@@ -292,12 +277,12 @@ public class DetailsFragment extends Fragment implements DatePickerDialog.OnDate
                 .into(header, new com.squareup.picasso.Callback() {
                     @Override
                     public void onSuccess() {
-                        scheduleStartPostponedTransition(header);
+//                        scheduleStartPostponedTransition(header);
                     }
 
                     @Override
                     public void onError(Exception e) {
-                        startPostponedEnterTransition();
+//                        startPostponedEnterTransition();
                     }
                 });
 
