@@ -79,11 +79,13 @@ public class HomeFragment extends Fragment implements View.OnClickListener,
     private GridLayoutManager gridLayoutManager;
 
     private AppDatabase mDb;
-
+    private Boolean isTablet;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        isTablet = getResources().getBoolean(R.bool.isTablet);
 
         mDb = AppDatabase.getPopularDestinationsDbInstance((getActivity()).getApplicationContext());
 
@@ -142,13 +144,19 @@ public class HomeFragment extends Fragment implements View.OnClickListener,
         retrieveTasks();
     }
 
-    public static int calculateNoOfColumns(@NonNull Context context) {
+    public int calculateNoOfColumns(@NonNull Context context) {
+
+        if (isTablet) {
+            return 2;
+        }
+
         DisplayMetrics displayMetrics = context.getResources().getDisplayMetrics();
         float dpWidth = displayMetrics.widthPixels / displayMetrics.density;
         int scalingFactor = 200;
         int noOfColumns = (int) (dpWidth / scalingFactor);
         if(noOfColumns < 2)
             noOfColumns = 2;
+
         return noOfColumns;
     }
 

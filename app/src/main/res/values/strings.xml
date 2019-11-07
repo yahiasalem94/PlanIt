@@ -55,4 +55,5 @@
     <string name="undo">UNDO</string>
     <string name="item_removed">Item was removed from the list.</string>
     <string name="bucket_list">BucketLists</string>
+    <string name="no_opening_hours">No Opening hours present at the time</string>
 </resources>

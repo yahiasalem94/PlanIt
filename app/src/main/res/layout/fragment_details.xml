@@ -91,6 +91,7 @@
                 android:layout_width="@dimen/address_width"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="@dimen/address_margin_start"
+                android:text="N/A"
                 tools:text="Jonckbloeatlaan 13J, 5615EM, Eindhoven, Netherlands"/>
         </LinearLayout>
 
@@ -114,6 +115,7 @@
                 android:layout_width="@dimen/address_width"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="@dimen/address_margin_start"
+                android:text="N/A"
                 tools:text="+31-xxx-xxx"/>
         </LinearLayout>
 
@@ -147,6 +149,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             tools:text="@string/monday"
+            android:text="@string/no_opening_hours"
             android:layout_below="@+id/opening_hours_title"
             android:layout_marginTop="@dimen/days_margin_top"
             android:layout_marginStart="@dimen/days_margin_start" />
