@@ -70,6 +70,7 @@
     </androidx.core.widget.NestedScrollView>
 
     <RelativeLayout
+        android:id="@+id/ad_layout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_gravity="bottom">
@@ -82,6 +83,15 @@
             ads:adSize="BANNER"
             ads:adUnitId="@string/adMob_bannerAd">
         </com.google.android.gms.ads.AdView>
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/adView"
+            android:layout_marginTop="8dp"
+            android:layout_marginBottom="8dp"
+            android:layout_alignParentEnd="true"
+            android:src="@drawable/powered_by_google_light"/>
     </RelativeLayout>
 
     <com.leinardi.android.speeddial.SpeedDialOverlayLayout
