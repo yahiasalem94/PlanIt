@@ -71,64 +71,33 @@ public class BestThingsTodoAdapter extends RecyclerView.Adapter<BestThingsTodoAd
     @Override
     public void onBindViewHolder(BestThingsTodoAdapterViewHolder adapterViewHolder, int position) {
 
+        if (mPoiData.get(position).getPhoto() != null) {
             String url = NetworkUtils.buildGooglePhotoUrl(mPoiData.get(position).getPhoto().get(0).getWidth(),
-                        mPoiData.get(position).getPhoto().get(0).getPhotoReference());
-//        List<Place.Field> fields = Arrays.asList(Place.Field.PHOTO_METADATAS);
-//        FetchPlaceRequest placeRequest = FetchPlaceRequest.builder(mPoiData.get(position).getPlaceId(), fields).build();
-//        placesClient.fetchPlace(placeRequest).addOnSuccessListener((response) -> {
-//            Place place = response.getPlace();
-//
-//            // Get the photo metadata.
-//            PhotoMetadata photoMetadata = place.getPhotoMetadatas().get(0);
-//
-//            // Get the attribution text.
-//            String attributions = photoMetadata.getAttributions();
-//
-//            // Create a FetchPhotoRequest.
-//            FetchPhotoRequest photoRequest = FetchPhotoRequest.builder(photoMetadata)
-//                    .setMaxWidth(500) // Optional.
-//                    .setMaxHeight(300) // Optional.
-//                    .build();
+                    mPoiData.get(position).getPhoto().get(0).getPhotoReference());
 
+            picasso.get()
+                    .load(NetworkUtils.buildGooglePhotoUrl(mPoiData.get(position).getPhoto().get(0).getWidth(),
+                            mPoiData.get(position).getPhoto().get(0).getPhotoReference()))
+                    .placeholder(R.drawable.no_image)
+                    .error(R.drawable.no_image)
+                    .into(adapterViewHolder.mPoiPhoto, new Callback() {
+                        @Override
+                        public void onSuccess() {
+                            adapterViewHolder.mNameOfPoi.setText(mPoiData.get(position).getName());
+                            adapterViewHolder.mPoiPhoto.setAdjustViewBounds(true);
+                        }
 
-//        PhotoMetadata photoMetadata = PhotoMetadata.builder(mPoiData.get(position).getPhoto().get(0).getPhotoReference())
-//                .setHeight(375)
-//                .setWidth(600)
-//                .build();
-//        FetchPhotoRequest photoRequest = FetchPhotoRequest.builder(photoMetadata).build();
-//
-//            placesClient.fetchPhoto(photoRequest).addOnSuccessListener((fetchPhotoResponse) -> {
-//                Bitmap bitmap = fetchPhotoResponse.getBitmap();
-//                adapterViewHolder.mPoiPhoto.setImageBitmap(bitmap);
-//            }).addOnFailureListener((exception) -> {
-//                if (exception instanceof ApiException) {
-//                    ApiException apiException = (ApiException) exception;
-//                    int statusCode = apiException.getStatusCode();
-//                    // Handle error with given status code.
-//                    Log.e(TAG, "Place not found: " + exception.getMessage());
-//                }
-//            });
-
-//        });
-
-        picasso.get()
-                .load(NetworkUtils.buildGooglePhotoUrl(mPoiData.get(position).getPhoto().get(0).getWidth(),
-                        mPoiData.get(position).getPhoto().get(0).getPhotoReference()))
-                .placeholder(R.drawable.no_image)
-                .error(R.drawable.no_image)
-                .into(adapterViewHolder.mPoiPhoto, new Callback() {
-                    @Override
-                    public void onSuccess() {
-                        adapterViewHolder.mNameOfPoi.setText(mPoiData.get(position).getName());
-                        adapterViewHolder.mPoiPhoto.setAdjustViewBounds(true);
-                    }
-
-                    @Override
-                    public void onError(Exception e) {
-                        adapterViewHolder.mNameOfPoi.setVisibility(View.INVISIBLE);
-                        adapterViewHolder.mNameLayout.setVisibility(View.INVISIBLE);
-                    }
-                });
+                        @Override
+                        public void onError(Exception e) {
+                            adapterViewHolder.mNameOfPoi.setVisibility(View.INVISIBLE);
+                            adapterViewHolder.mNameLayout.setVisibility(View.INVISIBLE);
+                        }
+                    });
+        } else {
+            adapterViewHolder.mPoiPhoto.setImageResource(R.drawable.no_image);
+            adapterViewHolder.mNameOfPoi.setText(mPoiData.get(position).getName());
+            adapterViewHolder.mPoiPhoto.setAdjustViewBounds(true);
+        }
     }
 
     @Override
