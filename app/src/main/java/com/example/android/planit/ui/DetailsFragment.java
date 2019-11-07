@@ -400,6 +400,10 @@ public class DetailsFragment extends Fragment implements DatePickerDialog.OnDate
             }
         }
 
+        if (placeDetails.getPhoto().get(0).getAttributions() != null) {
+            binding.attribution.setText(placeDetails.getPhoto().get(0).getAttributions().get(0));
+        }
+
         String rating = String.format("%.1f", placeDetails.getRating());
         binding.ratingValue.setText(rating);
         binding.ratingBar.setRating(placeDetails.getRating());

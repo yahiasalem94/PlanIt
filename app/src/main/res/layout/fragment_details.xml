@@ -119,6 +119,29 @@
                 tools:text="+31-xxx-xxx"/>
         </LinearLayout>
 
+                <LinearLayout
+                    android:id="@+id/attribution_layout"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:layout_marginStart="@dimen/address_layout_margin_start"
+                    android:layout_marginTop="@dimen/address_layout_margin_top"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/phone_layout">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Attributions"/>
+
+                    <TextView
+                        android:id="@+id/attribution"
+                        android:layout_width="@dimen/address_width"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="@dimen/address_margin_start"
+                        android:text="N/A" />
+                </LinearLayout>
+
         <RelativeLayout
             android:id="@+id/opening_hours_layout"
             android:layout_width="wrap_content"
@@ -127,7 +150,7 @@
             android:layout_marginStart="@dimen/openinghours_layout_margin_start"
             android:layout_marginTop="@dimen/openinghours_layout_margin_top"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/phone_layout">
+            app:layout_constraintTop_toBottomOf="@+id/attribution_layout">
 
         <ImageView
             android:id="@+id/opening_hours_icon"

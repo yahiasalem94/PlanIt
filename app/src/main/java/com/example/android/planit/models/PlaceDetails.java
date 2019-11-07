@@ -19,9 +19,12 @@ public class PlaceDetails {
     private String website;
     @SerializedName("opening_hours")
     private OpeningHours openingHours;
+    @SerializedName("photos")
+    private ArrayList <PointOfInterestPhoto> photo;
 
     public PlaceDetails(String address, String phoneNumber, Location location, String name, float rating,
-                        ArrayList<PlaceReviews> placeReviews, String website, OpeningHours openingHours) {
+                        ArrayList<PlaceReviews> placeReviews, String website, OpeningHours openingHours,
+                        ArrayList<PointOfInterestPhoto> photo) {
         this.address = address;
         this.phoneNumber = phoneNumber;
         this.location = location;
@@ -30,6 +33,7 @@ public class PlaceDetails {
         this.placeReviews = placeReviews;
         this.website = website;
         this.openingHours = openingHours;
+        this.photo = photo;
     }
 
     public String getAddress() {
@@ -94,5 +98,13 @@ public class PlaceDetails {
 
     public void setOpeningHours(OpeningHours openingHours) {
         this.openingHours = openingHours;
+    }
+
+    public ArrayList <PointOfInterestPhoto> getPhoto() {
+        return photo;
+    }
+
+    public void setPhotos(ArrayList <PointOfInterestPhoto> attributions) {
+        this.photo = photo;
     }
 }
