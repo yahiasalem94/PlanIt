@@ -36,6 +36,7 @@
     <string name="appwidget_text">EXAMPLE</string>
     <string name="add_widget">Add widget</string>
     <string name="no_buckets">Geen BucketLists</string>
+    <string name="bucket_items_error_message">Geen items toegevoegd aan bucketlist</string>
 
     <string name="language_preference">key language</string>
     <string name="empty_bucketlist">BucketList is leeg</string>
