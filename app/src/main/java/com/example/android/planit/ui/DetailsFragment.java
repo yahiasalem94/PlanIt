@@ -1,10 +1,12 @@
 package com.example.android.planit.ui;
 
 
+import android.Manifest;
 import android.app.DatePickerDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.graphics.Color;
 import android.net.Uri;
 import android.os.Bundle;
@@ -22,6 +24,8 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.widget.Toolbar;
+import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
 import androidx.core.content.res.ResourcesCompat;
 import androidx.core.widget.NestedScrollView;
 import androidx.databinding.DataBindingUtil;
@@ -64,6 +68,8 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
+import static android.Manifest.permission.CALL_PHONE;
+
 /**
  * A simple {@link Fragment} subclass.
  */
@@ -71,7 +77,7 @@ public class DetailsFragment extends Fragment implements DatePickerDialog.OnDate
         ReviewsAdapter.ReviewsAdapterOnClickHandler {
 
     private static final String TAG = DetailsFragment.class.getSimpleName();
-
+    private static final int MY_PERMISSIONS_REQUEST_CALL_PHONE = 100;
     private DatePickerDialog datePickerDialog;
     private final Calendar calendar;
     private int year;
@@ -208,7 +214,7 @@ public class DetailsFragment extends Fragment implements DatePickerDialog.OnDate
 
         binding.addressLayout.setClickable(false);
         binding.addressLayout.setOnClickListener(v -> {
-            Uri uri = Uri.parse("google.navigation:q="+placeDetails.getAddress());
+            Uri uri = Uri.parse("geo:0,0?q="+placeDetails.getAddress());
             Intent mapIntent = new Intent(Intent.ACTION_VIEW, uri);
             mapIntent.setPackage("com.google.android.apps.maps");
             startActivity(mapIntent);
@@ -218,7 +224,23 @@ public class DetailsFragment extends Fragment implements DatePickerDialog.OnDate
         binding.phoneLayout.setOnClickListener(v -> {
             Intent callIntent = new Intent(Intent.ACTION_CALL);
             callIntent.setData(Uri.parse("tel:"+placeDetails.getPhoneNumber()));
-            startActivity(callIntent);
+
+            if (ContextCompat.checkSelfPermission(getActivity(), Manifest.permission.CALL_PHONE) != PackageManager.PERMISSION_GRANTED) {
+
+                ActivityCompat.requestPermissions(getActivity(), new String[]{Manifest.permission.CALL_PHONE},
+                        MY_PERMISSIONS_REQUEST_CALL_PHONE);
+
+                // MY_PERMISSIONS_REQUEST_CALL_PHONE is an
+                // app-defined int constant. The callback method gets the
+                // result of the request.
+            } else {
+                //You already have permission
+                try {
+                    startActivity(callIntent);
+                } catch(SecurityException e) {
+                    e.printStackTrace();
+                }
+            }
         });
 
         speedDialView = ((MainActivity) getActivity()).speedDialView;
@@ -289,6 +311,26 @@ public class DetailsFragment extends Fragment implements DatePickerDialog.OnDate
         retrieveBucketLists();
         retrieveCalendarEntries();
         loadDetails();
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, String permissions[], int[] grantResults) {
+        switch (requestCode) {
+            case MY_PERMISSIONS_REQUEST_CALL_PHONE: {
+                // If request is cancelled, the result arrays are empty.
+                if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                    // permission was granted, yay! Do the phone call
+                    Intent callIntent = new Intent(Intent.ACTION_CALL);
+                    callIntent.setData(Uri.parse("tel:"+placeDetails.getPhoneNumber()));
+                    startActivity(callIntent);
+                } else {
+                    // permission denied, boo! Disable the
+                    // functionality that depends on this permission.
+                    Toast.makeText(getActivity(), "Permission to make call was denied :(", Toast.LENGTH_SHORT);
+                }
+                return;
+            }
+        }
     }
 
     private void loadDetails() {
