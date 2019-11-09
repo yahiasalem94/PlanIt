@@ -31,10 +31,12 @@ to do in each city. It also quickly helps you figure out what are the best landm
 ### User Interface
 
 <img src="images/screen1.png" width="200"> <img src="images/screen2.png" width="200">  <img src="images/screen3.png" width="200">
- <img src="images/screen5.png" width="200">  <img src="images/screen6.png" width="200">  <img src="images/screen7.png" width="200">
+<img src="images/screen5.png" width="200">  <img src="images/screen6.png" width="200">  <img src="images/screen7.png" width="200">
 
 ### License
-Copyright 2019 Yahia Salem
+
+### License
+<blockquote Copyright 2019 Yahia Salem
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -47,3 +49,5 @@ distributed under the License is distributed on an "AS IS" BASIS,
 WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 See the License for the specific language governing permissions and
 limitations under the License.
+© 2019 GitHub, Inc.
+</blockquote>
