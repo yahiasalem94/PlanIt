@@ -15,6 +15,7 @@
             android:layout_marginTop="@dimen/search_view_margin_top"
             android:layout_marginStart="@dimen/search_view_margin_start_end"
             android:layout_marginEnd="@dimen/search_view_margin_start_end"
+            android:hint="@string/serchview_hint"
             android:drawableLeft="@drawable/ic_search"
             android:drawablePadding="16dp"
             android:background="@drawable/searchview_rounded"

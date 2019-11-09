@@ -326,7 +326,7 @@ public class DetailsFragment extends Fragment implements DatePickerDialog.OnDate
                 } else {
                     // permission denied, boo! Disable the
                     // functionality that depends on this permission.
-                    Toast.makeText(getActivity(), "Permission to make call was denied :(", Toast.LENGTH_SHORT);
+                    Toast.makeText(getActivity(), getActivity().getString(R.string.call_permission_denied), Toast.LENGTH_SHORT);
                 }
                 return;
             }
@@ -462,12 +462,12 @@ public class DetailsFragment extends Fragment implements DatePickerDialog.OnDate
     private void chooseBucketListDialog() {
 
         if (mBucketLists.size() <= 0){
-            Toast.makeText(getActivity(), "No BucketLists Created", Toast.LENGTH_SHORT).show();
+            Toast.makeText(getActivity(), getString(R.string.no_buckets_created), Toast.LENGTH_SHORT).show();
             return;
         }
         // setup the alert builder
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
-        builder.setTitle("Choose a BucketList");
+        builder.setTitle(getActivity().getString(R.string.choose_bucket));
 
         // add a list
         String[] array = mBucketListsName.toArray(new String[mBucketListsName.size()]);
@@ -520,13 +520,13 @@ public class DetailsFragment extends Fragment implements DatePickerDialog.OnDate
                         }
                     }
                     if (isFound) {
-                        Toast.makeText(getActivity(), "Item already added on this date", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(getActivity(), getActivity().getString(R.string.item_already_in_calendar), Toast.LENGTH_SHORT).show();
                         isFound = false;
                     } else {
                         items.add(bucketListItem);
                         calendar.setItems(items);
                         mDb.myCalendarDao().updateaCalendarEntry(calendar);
-                        Toast.makeText(getActivity(), "Item added to calendar", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(getActivity(), getActivity().getString(R.string.item_added_calendar), Toast.LENGTH_SHORT).show();
                     }
 
                 }

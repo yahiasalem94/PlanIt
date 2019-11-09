@@ -56,4 +56,16 @@
     <string name="item_removed">Item was removed from the list.</string>
     <string name="bucket_list">BucketLists</string>
     <string name="no_opening_hours">No Opening hours present at the time</string>
+    <string name="bucketlist_created">BucketList Created</string>
+    <string name="call_permission_denied">Permission to make call was denied :(</string>
+    <string name="no_buckets_created">No BucketLists Created</string>
+    <string name="item_already_in_calendar">Item already added on this date</string>
+    <string name="item_added_calendar">Item added to calendar</string>
+    <string name="choose_bucket">Choose a BucketList</string>
+    <string name="gps_not_enabled">GPS is not Enabled!</string>
+    <string name="turn_on_gps">Do you want to turn on GPS?</string>
+    <string name="content_descrip_pois">Image of a point of interest</string>
+    <string name="serchview_hint">search for cities</string>
+    <string name="enter_city">Please enter a City</string>
+    <string name="create_a_new_bucketlist">create a new bucketlist</string>
 </resources>

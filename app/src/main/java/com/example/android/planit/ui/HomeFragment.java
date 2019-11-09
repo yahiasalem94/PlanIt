@@ -168,7 +168,7 @@ public class HomeFragment extends Fragment implements View.OnClickListener,
             bundle.putString(CITY_NAME, binding.simpleSearchView.getText().toString());
             navController.navigate(R.id.bestThingsTodoFragment, bundle);
         } else {
-            Toast.makeText(getActivity(), "Please enter a City", Toast.LENGTH_SHORT).show();
+            Toast.makeText(getActivity(), getActivity().getString(R.string.enter_city), Toast.LENGTH_SHORT).show();
         }
     }
 

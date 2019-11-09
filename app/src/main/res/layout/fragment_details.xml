@@ -84,7 +84,8 @@
             <ImageView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:src="@drawable/location_icon"/>
+                android:src="@drawable/location_icon"
+                android:contentDescription="@null"/>
 
             <TextView
                 android:id="@+id/address"
@@ -108,6 +109,7 @@
             <ImageView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:contentDescription="@null"
                 android:src="@drawable/phone_icon"/>
 
             <TextView
@@ -156,6 +158,7 @@
             android:id="@+id/opening_hours_icon"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:contentDescription="@null"
             android:src="@drawable/opening_hours_icon"
             />
 

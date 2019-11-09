@@ -31,6 +31,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:transitionName="@string/transition_image"
+                android:contentDescription="@string/content_descrip_pois"
                 android:layout_marginTop="50dp"
                 android:adjustViewBounds="true"
                 android:scaleType="fitXY"

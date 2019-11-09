@@ -302,7 +302,7 @@ public class BucketListFragment extends Fragment implements View.OnClickListener
                     getActivity().runOnUiThread(new Runnable() {
                         @Override
                         public void run() {
-                            Toast.makeText(getActivity(), "BucketList Created", Toast.LENGTH_SHORT).show();
+                            Toast.makeText(getActivity(),  getActivity().getString(R.string.bucketlist_created), Toast.LENGTH_SHORT).show();
                         }
                     });
                 }

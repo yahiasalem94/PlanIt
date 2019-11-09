@@ -17,6 +17,8 @@ import android.widget.Toast;
 import androidx.appcompat.app.AlertDialog;
 import androidx.core.app.ActivityCompat;
 
+import com.example.android.planit.R;
+
 
 public class LocationTrack extends Service implements LocationListener {
 
@@ -151,9 +153,9 @@ public class LocationTrack extends Service implements LocationListener {
         AlertDialog.Builder alertDialog = new AlertDialog.Builder(mContext);
 
 
-        alertDialog.setTitle("GPS is not Enabled!");
+        alertDialog.setTitle(getString(R.string.gps_not_enabled));
 
-        alertDialog.setMessage("Do you want to turn on GPS?");
+        alertDialog.setMessage(getString(R.string.turn_on_gps));
 
 
         alertDialog.setPositiveButton("Yes", new DialogInterface.OnClickListener() {

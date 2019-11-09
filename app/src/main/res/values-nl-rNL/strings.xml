@@ -43,4 +43,19 @@
     <string name="undo">ONTDOEN</string>
     <string name="item_removed">Item is uit de lijst verwijderd.</string>
     <string name="bucket_list">BucketLists</string>
+
+    <string name="no_opening_hours">Er zijn op dat moment geen openingstijden aanwezig</string>
+    <string name="bucketlist_created">BucketList gemaakt</string>
+    <string name="call_permission_denied">Toestemming om te belen werd geweigerd :(</string>
+    <string name="no_buckets_created">Geen BucketLists gemaaakt</string>
+    <string name="item_already_in_calendar">Item al toegevoegd op deze dtum</string>
+    <string name="item_added_calendar">Itemtoegevoegd aan kalender</string>
+    <string name="choose_bucket">Kies een BucketList</string>
+    <string name="gps_not_enabled">GPS is niet ingeschakeld!</string>
+    <string name="turn_on_gps">Wil je GPS inschakelen?</string>
+    <string name="content_descrip_pois">afbeelding van een bezienswaardigheid</string>
+    <string name="serchview_hint">Zoeken naar steden</string>
+    <string name="enter_city">Voer een stad in</string>
+    <string name="create_a_new_bucketlist">maak een nieuwe bucketlist</string>
+
 </resources>
