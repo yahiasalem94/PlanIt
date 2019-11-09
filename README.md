@@ -17,6 +17,7 @@ to do in each city. It also quickly helps you figure out what are the best landm
 
 ### What I Use
 - Androidx
+- Widgets
 - Retrofit
 - Picasso
 - Leinardi speeddial 
