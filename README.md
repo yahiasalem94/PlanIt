@@ -35,8 +35,6 @@ to do in each city. It also quickly helps you figure out what are the best landm
 <img src="images/screen5.png" width="200">  <img src="images/screen6.png" width="200">  <img src="images/screen7.png" width="200">
 
 ### License
-
-### License
 <blockquote Copyright 2019 Yahia Salem
 
 Licensed under the Apache License, Version 2.0 (the "License");
