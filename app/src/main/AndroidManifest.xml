@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.example.android.planit">
+    package="com.ysalem.android.planit">
 
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
@@ -14,9 +14,10 @@
         android:label="@string/app_name"
         android:roundIcon="@drawable/p_logo"
         android:supportsRtl="true"
-        android:theme="@style/AppTheme">
+        android:theme="@style/AppTheme"
+        android:versionCode="2">
 
-        <receiver android:name=".Widget.PlanItWidget">
+        <receiver android:name="com.ysalem.android.planit.Widget.PlanItWidget">
             <intent-filter>
                 <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
             </intent-filter>
@@ -26,11 +27,11 @@
                 android:resource="@xml/plan_it_widget_info" />
         </receiver>
 
-        <service android:name=".Widget.WidgetUpdateService" />
+        <service android:name="com.ysalem.android.planit.Widget.WidgetUpdateService" />
 
 
         <service
-            android:name=".Widget.ListWidgetService"
+            android:name="com.ysalem.android.planit.Widget.ListWidgetService"
             android:permission="android.permission.BIND_REMOTEVIEWS" />
 
 
@@ -40,20 +41,20 @@
 
         <meta-data
             android:name="com.google.android.gms.ads.APPLICATION_ID"
-            android:value="ca-app-pub-3940256099942544~3347511713"/>
+            android:value="ca-app-pub-1347708863162478~9296884830"/>
 
-        <activity android:name=".ui.MainActivity"
+        <activity android:name="com.ysalem.android.planit.ui.MainActivity"
             android:screenOrientation="portrait">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
-
+                <action android:name="android.intent.action.VIEW"/>
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
 
         </activity>
 
         <receiver
-            android:name="utils.ConnectionReceiver"
+            android:name="com.ysalem.android.planit.utils.ConnectionReceiver"
             android:enabled="true">
             <intent-filter>
 

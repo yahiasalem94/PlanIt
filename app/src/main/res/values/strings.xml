@@ -2,8 +2,7 @@
     <string name="app_name" translatable="false">PlanIt</string>
 
     <string name="adMob_appId" translatable="false">ca-app-pub-1347708863162478~9296884830</string>
-    <!--<string name="adMob_bannerAd" translatable="false">ca-app-pub-1347708863162478/9146493989</string>-->
-    <string name="adMob_bannerAd" translatable="false">ca-app-pub-3940256099942544/6300978111</string>
+    <string name="adMob_bannerAd" translatable="false">ca-app-pub-1347708863162478/9146493989</string>
 
     <string name="Open" translatable="false">open</string>
     <string name="Close" translatable="false">close</string>
