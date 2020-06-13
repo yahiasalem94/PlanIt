@@ -190,9 +190,11 @@ public class bestThingsTodoFragment extends Fragment implements BestThingsTodoAd
         Bundle bundle = new Bundle();
         bundle.putString(PLACE_ID, pois.get(position).getPlaceId());
         bundle.putString(POI_NAME, pois.get(position).getName());
-        bundle.putString(PHOTO_REF, pois.get(position).getPhoto().get(0).getPhotoReference());
-        bundle.putInt(PHOTO_WIDTH, pois.get(position).getPhoto().get(0).getWidth());
 
+        if (pois.get(position).getPhoto() != null) {
+            bundle.putString(PHOTO_REF, pois.get(position).getPhoto().get(0).getPhotoReference());
+            bundle.putInt(PHOTO_WIDTH, pois.get(position).getPhoto().get(0).getWidth());
+        }
 
         FragmentNavigator.Extras extras = new FragmentNavigator.Extras.Builder()
                 .addSharedElement(view, String.valueOf(R.string.transition_image)).build();

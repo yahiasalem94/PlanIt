@@ -59,6 +59,8 @@ import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Date;
+import java.util.GregorianCalendar;
 import java.util.List;
 
 import retrofit2.Call;
@@ -110,6 +112,8 @@ public class DetailsFragment extends Fragment implements DatePickerDialog.OnDate
     private int scrollRange = -1;
     private boolean isPause = false;
 
+    private Picasso picasso;
+
     public DetailsFragment() {
         // Required empty public constructor
         calendar = Calendar.getInstance();
@@ -127,10 +131,10 @@ public class DetailsFragment extends Fragment implements DatePickerDialog.OnDate
         mBucketListsName = new ArrayList<>();
 
         if (getArguments() != null
-                && getArguments().containsKey(bestThingsTodoFragment.PLACE_ID)
-                && getArguments().containsKey(bestThingsTodoFragment.POI_NAME)
-                && getArguments().containsKey(bestThingsTodoFragment.PHOTO_REF)
-                && getArguments().containsKey(bestThingsTodoFragment.PHOTO_WIDTH)) {
+                || getArguments().containsKey(bestThingsTodoFragment.PLACE_ID)
+                || getArguments().containsKey(bestThingsTodoFragment.POI_NAME)
+                || getArguments().containsKey(bestThingsTodoFragment.PHOTO_REF)
+                || getArguments().containsKey(bestThingsTodoFragment.PHOTO_WIDTH)) {
 
            // city = getArguments().getString(HomeFragment.CITY_NAME);
             placeId = getArguments().getString(bestThingsTodoFragment.PLACE_ID);
@@ -144,7 +148,7 @@ public class DetailsFragment extends Fragment implements DatePickerDialog.OnDate
         datePickerDialog = new DatePickerDialog(getActivity(), this, year, month, day);
 
         mAdapter = new ReviewsAdapter(this, getActivity());
-
+        picasso = NetworkUtils.picassoClient(getActivity());
 //        setSharedElementEnterTransition(TransitionInflater.from(getContext()).inflateTransition(android.R.transition.move));
 //        postponeEnterTransition();
     }
@@ -287,7 +291,7 @@ public class DetailsFragment extends Fragment implements DatePickerDialog.OnDate
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        Picasso.get()
+        picasso.get()
                 .load(NetworkUtils.buildGooglePhotoUrl(photoWidth, photoRef))
                 .placeholder(R.drawable.no_image)
                 .error(R.drawable.no_image)
@@ -395,7 +399,7 @@ public class DetailsFragment extends Fragment implements DatePickerDialog.OnDate
             }
         }
 
-        if (placeDetails.getPhoto().get(0).getAttributions() != null) {
+        if (placeDetails.getPhoto() != null) {
             binding.attribution.setText(placeDetails.getPhoto().get(0).getAttributions().get(0));
         }
 
@@ -478,7 +482,7 @@ public class DetailsFragment extends Fragment implements DatePickerDialog.OnDate
         dialog.show();
     }
 
-    private void addToCalendar(int year, int month, int dayOfMonth) {
+    private void addToCalendar(Date date) {
         AppExecutors.getInstance().diskIO().execute(new Runnable() {
             @Override
             public void run() {
@@ -493,19 +497,19 @@ public class DetailsFragment extends Fragment implements DatePickerDialog.OnDate
                 BucketListItem bucketListItem = new BucketListItem(pointsOfInterestsArrayList);
                 ArrayList<BucketListItem> items = new ArrayList<>();
                 items.add(bucketListItem);
-                CalendarDay date = CalendarDay.from(year, month, dayOfMonth);
-                MyCalendar calendar = new MyCalendar(year, month, dayOfMonth,date, items);
+                //CalendarDay date = CalendarDay.from(year, month, dayOfMonth);
+                MyCalendar calendar = new MyCalendar(date, items);
                 long result = mDb.myCalendarDao().insertCalendarEntry(calendar);
 
                 if (result == -1) {
-                    CalendarDay calendardate = CalendarDay.from(year, month, dayOfMonth);
-                    CalendarDay eventDate;
+//                    CalendarDay calendardate = CalendarDay.from(year, month, dayOfMonth);
+//                    CalendarDay eventDate;
                     for (int i = 0; i< calendarEntries.size(); i++) {
-                        eventDate = CalendarDay.from(calendarEntries.get(i).getYear(),
-                                calendarEntries.get(i).getMonth(),
-                                calendarEntries.get(i).getDay());
+//                        eventDate = CalendarDay.from(calendarEntries.get(i).getYear(),
+//                                calendarEntries.get(i).getMonth(),
+//                                calendarEntries.get(i).getDay());
 
-                        if (eventDate.equals(calendardate)) {
+                        if (calendarEntries.get(i).getDate().equals(date)) {
                             items = calendarEntries.get(i).getItems();
                         }
                     }
@@ -570,7 +574,10 @@ public class DetailsFragment extends Fragment implements DatePickerDialog.OnDate
 
     @Override
     public void onDateSet(DatePicker view, int year, int month, int dayOfMonth) {
-        addToCalendar(year, month+1 , dayOfMonth);
+        Log.d(TAG, "Year is " + year + "month is " + month + "Day is " + dayOfMonth );
+        Date date = new GregorianCalendar(year, month+1, dayOfMonth).getTime();
+        Log.d(TAG, "Date is " + date);
+        addToCalendar(date);
     }
 
     @Override

@@ -10,6 +10,7 @@ import androidx.room.Update;
 
 import com.ysalem.android.planit.models.MyCalendar;
 
+import java.util.Date;
 import java.util.List;
 
 @Dao
@@ -24,8 +25,8 @@ public interface MyCalendarDao {
     @Update
     void updateaCalendarEntry(MyCalendar calendarEntry);
 
-    @Query("SELECT * FROM my_calendar WHERE date = :date")
-    LiveData<MyCalendar> loadEntry(String date);
+    @Query("SELECT * FROM my_calendar WHERE date = :value")
+    LiveData<MyCalendar> loadEntry(Long value);
 
     @Delete
     void deleteCalendarEntry(MyCalendar calendarEntry);

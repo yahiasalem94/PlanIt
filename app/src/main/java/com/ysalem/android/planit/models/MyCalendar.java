@@ -10,30 +10,31 @@ import androidx.room.PrimaryKey;
 import androidx.room.TypeConverters;
 
 import com.ysalem.android.planit.utils.BucketListItemConverter;
-import com.ysalem.android.planit.utils.CalendarDayConverter;
+import com.ysalem.android.planit.utils.CalendarConverter;
 import com.prolificinteractive.materialcalendarview.CalendarDay;
 
 import java.util.ArrayList;
+import java.util.Date;
 
 @Entity(tableName = "my_calendar")
 public class MyCalendar implements Parcelable {
 //    @PrimaryKey(autoGenerate = true)
     private int uniqueId;
 
-    private int year;
-    private int month;
-    private int day;
+//    private int year;
+//    private int month;
+//    private int day;
     @PrimaryKey
     @NonNull
-    @TypeConverters(CalendarDayConverter.class)
-    private CalendarDay date;
+    @TypeConverters(CalendarConverter.class)
+    private Date date;
     @TypeConverters(BucketListItemConverter.class)
     private ArrayList<BucketListItem> items;
 
-    public MyCalendar(int year, int month, int day, CalendarDay date, ArrayList<BucketListItem> items) {
-        this.year = year;
-        this.month = month;
-        this.day = day;
+    public MyCalendar(/*int year, int month, int day, */Date date, ArrayList<BucketListItem> items) {
+//        this.year = year;
+//        this.month = month;
+//        this.day = day;
         this.date = date;
         this.items = items;
     }
@@ -41,42 +42,42 @@ public class MyCalendar implements Parcelable {
 
     protected MyCalendar(Parcel in) {
         uniqueId = in.readInt();
-        year = in.readInt();
-        month = in.readInt();
-        day = in.readInt();
+//        year = in.readInt();
+//        month = in.readInt();
+//        day = in.readInt();
         date = in.readParcelable(CalendarDay.class.getClassLoader());
         items = in.createTypedArrayList(BucketListItem.CREATOR);
     }
 
-    public int getYear() {
-        return year;
-    }
+//    public int getYear() {
+//        return year;
+//    }
+//
+//    public void setYear(int  year) {
+//        this.year = year;
+//    }
+//
+//    public int getMonth() {
+//        return month;
+//    }
+//
+//    public void setMonth(int  month) {
+//        this.month = month;
+//    }
+//
+//    public int getDay() {
+//        return day;
+//    }
+//
+//    public void setDay(int  day) {
+//        this.day = day;
+//    }
 
-    public void setYear(int  year) {
-        this.year = year;
-    }
-
-    public int getMonth() {
-        return month;
-    }
-
-    public void setMonth(int  month) {
-        this.month = month;
-    }
-
-    public int getDay() {
-        return day;
-    }
-
-    public void setDay(int  day) {
-        this.day = day;
-    }
-
-    public CalendarDay getDate() {
+    public Date getDate() {
         return date;
     }
 
-    public void setDate(CalendarDay date) {
+    public void setDate(Date date) {
         this.date = date;
     }
 
@@ -104,10 +105,10 @@ public class MyCalendar implements Parcelable {
     @Override
     public void writeToParcel(Parcel dest, int flags) {
         dest.writeInt(uniqueId);
-        dest.writeInt(year);
-        dest.writeInt(month);
-        dest.writeInt(day);
-        dest.writeParcelable(date, flags);
+//        dest.writeInt(year);
+//        dest.writeInt(month);
+//        dest.writeInt(day);
+        dest.writeParcelable((Parcelable) date, flags);
         dest.writeTypedList(items);
     }
 

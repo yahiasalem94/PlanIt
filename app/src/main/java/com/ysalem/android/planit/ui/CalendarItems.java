@@ -34,6 +34,7 @@ import com.google.android.material.snackbar.Snackbar;
 import com.prolificinteractive.materialcalendarview.CalendarDay;
 
 import java.util.ArrayList;
+import java.util.Date;
 
 
 public class CalendarItems extends Fragment implements BucketListItemsAdapter.BucketListItemsAdapterOnClickHandler {
@@ -44,7 +45,7 @@ public class CalendarItems extends Fragment implements BucketListItemsAdapter.Bu
 //    private BucketList mBucketList;
     private MyCalendar calendarEntry;
     private ArrayList<BucketListItem> items;
-    private CalendarDay date;
+    private Date date;
     private BucketListItemsAdapter mBucketListItemAdapter;
 
     private AppDatabase mDb;
@@ -70,7 +71,9 @@ public class CalendarItems extends Fragment implements BucketListItemsAdapter.Bu
                 && getArguments().containsKey(MyCalendarFragment.CALENDAR_ENTRY)) {
             items = getArguments().getParcelableArrayList(MyCalendarFragment.CALENDAR_ITEMS);
 //            calendarEntry = getArguments().getParcelable(MyCalendarFragment.CALENDAR_ENTRY);
-            date = getArguments().getParcelable(MyCalendarFragment.CALENDAR_ENTRY);
+            date = (Date) getArguments().getSerializable(MyCalendarFragment.CALENDAR_ENTRY);
+            Log.d(TAG, "Items " + items.toString());
+            Log.d(TAG, "Date is " + date);
         }
 
         mDb = AppDatabase.getMyCalendarDbInstance((getActivity()).getApplicationContext());
@@ -120,15 +123,16 @@ public class CalendarItems extends Fragment implements BucketListItemsAdapter.Bu
 
     private void loadCalendarEntry() {
         Log.d(TAG, "Actively retrieving the entries from the DataBase");
-        int year = date.getYear();
-        int month = date.getMonth();
-        int day = date.getDay();
-        String stringDate;
-        StringBuffer sb = new StringBuffer();
-        sb.append(year).append(month).append(day);
-        stringDate = sb.toString();
-        Log.d(TAG, stringDate);
-        LiveData<MyCalendar> entry = mDb.myCalendarDao().loadEntry(stringDate);
+//        int year = date.getYear();
+//        int month = date.getMonth();
+//        int day = date.getDay();
+//        String stringDate;
+//        StringBuffer sb = new StringBuffer();
+//        sb.append(year).append(month).append(day);
+//        stringDate = sb.toString();
+//        Log.d(TAG, stringDate);
+
+        LiveData<MyCalendar> entry = mDb.myCalendarDao().loadEntry(date.getTime());
         entry.observe(this, new Observer<MyCalendar>() {
             @Override
             public void onChanged(@Nullable MyCalendar entry) {

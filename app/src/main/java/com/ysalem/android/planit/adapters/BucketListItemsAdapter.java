@@ -21,6 +21,7 @@ public class BucketListItemsAdapter extends RecyclerView.Adapter<BucketListItems
 
     private ArrayList<BucketListItem> mData;
     private final BucketListItemsAdapterOnClickHandler mClickHandler;
+    private Picasso picasso;
 
     public interface BucketListItemsAdapterOnClickHandler {
         void onClick(int position);
@@ -29,6 +30,7 @@ public class BucketListItemsAdapter extends RecyclerView.Adapter<BucketListItems
 
     public BucketListItemsAdapter(BucketListItemsAdapterOnClickHandler clickHandler, Context context) {
         mClickHandler = clickHandler;
+        picasso = NetworkUtils.picassoClient(context);
     }
 
     @Override
@@ -47,7 +49,7 @@ public class BucketListItemsAdapter extends RecyclerView.Adapter<BucketListItems
 //                .placeholder(R.drawable.no_image)
 //                .error(R.drawable.no_image)
 //                .into(adapterViewHolder.mProfilePhoto);
-        Picasso.get()
+        picasso.get()
                 .load(NetworkUtils.buildGooglePhotoUrl(mData.get(position).getActivities().get(0).getPhoto().get(0).getWidth(),
                         mData.get(position).getActivities().get(0).getPhoto().get(0).getPhotoReference()))
                 .placeholder(R.drawable.no_image)

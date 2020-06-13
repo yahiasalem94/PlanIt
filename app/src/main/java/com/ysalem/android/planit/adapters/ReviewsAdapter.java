@@ -10,6 +10,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.ysalem.android.planit.R;
 import com.ysalem.android.planit.models.PlaceReviews;
 import com.squareup.picasso.Picasso;
+import com.ysalem.android.planit.utils.NetworkUtils;
 
 import java.util.ArrayList;
 
@@ -17,6 +18,7 @@ public class ReviewsAdapter extends RecyclerView.Adapter<ReviewsAdapterViewHolde
 
     private ArrayList<PlaceReviews> mData;
     private final ReviewsAdapterOnClickHandler mClickHandler;
+    private Picasso picasso;
 
     public interface ReviewsAdapterOnClickHandler {
         void onClick(int position);
@@ -25,6 +27,7 @@ public class ReviewsAdapter extends RecyclerView.Adapter<ReviewsAdapterViewHolde
 
     public ReviewsAdapter(ReviewsAdapterOnClickHandler clickHandler, Context context) {
         mClickHandler = clickHandler;
+        picasso = NetworkUtils.picassoClient(context);
     }
 
     @Override
@@ -38,7 +41,7 @@ public class ReviewsAdapter extends RecyclerView.Adapter<ReviewsAdapterViewHolde
 
     @Override
     public void onBindViewHolder(ReviewsAdapterViewHolder adapterViewHolder, int position) {
-        Picasso.get()
+        picasso.get()
                 .load(mData.get(position).getProfilePhoto())
                 .placeholder(R.drawable.no_image)
                 .error(R.drawable.no_image)

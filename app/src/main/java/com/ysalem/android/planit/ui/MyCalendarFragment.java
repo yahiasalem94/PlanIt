@@ -2,6 +2,7 @@ package com.ysalem.android.planit.ui;
 
 
 import android.os.Bundle;
+import android.os.Parcelable;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -28,7 +29,11 @@ import com.prolificinteractive.materialcalendarview.CalendarDay;
 import com.prolificinteractive.materialcalendarview.MaterialCalendarView;
 import com.prolificinteractive.materialcalendarview.OnDateSelectedListener;
 
+import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.GregorianCalendar;
 import java.util.List;
 
 
@@ -44,7 +49,10 @@ public class MyCalendarFragment extends Fragment implements  CalendarAdapter.Cal
     private ArrayList<CalendarDay> calendarDays;
     private ArrayList<BucketListItem> items;
     private int position;
-    private CalendarDay eventDate;
+    private Date eventDate;
+    private int year;
+    private int month;
+    private int day;
     private boolean foundItems = false;
     /* Views */
     private View mRootView;
@@ -87,12 +95,14 @@ public class MyCalendarFragment extends Fragment implements  CalendarAdapter.Cal
 
         mCalendarView.setOnDateChangedListener(new OnDateSelectedListener() {
             @Override
-            public void onDateSelected(@NonNull MaterialCalendarView widget, @NonNull CalendarDay date, boolean selected) {
+            public void onDateSelected(@NonNull MaterialCalendarView widget, @NonNull CalendarDay calendarDay, boolean selected) {
                 for (int i = 0; i<calendarsEntries.size(); i++) {
-                    eventDate = CalendarDay.from(calendarsEntries.get(i).getYear(),
-                            calendarsEntries.get(i).getMonth(),
-                            calendarsEntries.get(i).getDay());
 
+                    eventDate = calendarsEntries.get(i).getDate();
+                    year = calendarDay.getYear();
+                    month = calendarDay.getMonth();
+                    day = calendarDay.getDay();
+                    Date date = new GregorianCalendar(year, month, day).getTime();
                     if (eventDate.equals(date)) {
                         items = calendarsEntries.get(i).getItems();
                         position = i;
@@ -105,7 +115,8 @@ public class MyCalendarFragment extends Fragment implements  CalendarAdapter.Cal
                     Bundle bundle = new Bundle();
                     bundle.putParcelableArrayList(CALENDAR_ITEMS, items);
 //                    bundle.putParcelable(CALENDAR_ENTRY, calendarsEntries.get(position));
-                    bundle.putParcelable(CALENDAR_ENTRY, calendarsEntries.get(position).getDate());
+                    bundle.putSerializable(CALENDAR_ENTRY, calendarsEntries.get(position).getDate());
+                    Log.d(TAG, "Date is "+ calendarsEntries.get(position).getDate());
                     navController.navigate(R.id.calendarItems, bundle);
                 }
             }
@@ -144,8 +155,9 @@ public class MyCalendarFragment extends Fragment implements  CalendarAdapter.Cal
         calendarDays = new ArrayList<>();
         mCalendarView.invalidateDecorators();
         for (int i = 0; i<entries.size(); i++) {
-            CalendarDay calendarDay = CalendarDay.from(entries.get(i).getYear(), entries.get(i).getMonth(), entries.get(i).getDay());
-
+            Calendar calendar = Calendar.getInstance();
+            calendar.setTime(entries.get(i).getDate());
+            CalendarDay calendarDay = CalendarDay.from(calendar.get(Calendar.YEAR), calendar.get(Calendar.MONTH), calendar.get(Calendar.DAY_OF_MONTH));
             calendarDays.add(calendarDay);
         }
         EventDecorator eventDecorator = new EventDecorator(ContextCompat.getDrawable(getActivity(), R.drawable.circle_border), calendarDays);

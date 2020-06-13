@@ -38,7 +38,7 @@ public class CreateBucketList extends Fragment {
     public static final String CREATE_BUCKET_NAME = "bucketName";
     private View mRootview;
 
-//    private TextView txtVw;
+    //    private TextView txtVw;
     private EditText queryText;
     private Button mSearchButton;
     private TextView mSearchResult;

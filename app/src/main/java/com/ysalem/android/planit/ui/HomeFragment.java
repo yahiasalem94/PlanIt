@@ -59,7 +59,7 @@ public class HomeFragment extends Fragment implements View.OnClickListener,
     private GridLayoutManager gridLayoutManager;
 
     private AppDatabase mDb;
-    private Boolean isTablet;
+    private static Boolean isTablet;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -124,7 +124,7 @@ public class HomeFragment extends Fragment implements View.OnClickListener,
         retrieveTasks();
     }
 
-    public int calculateNoOfColumns(@NonNull Context context) {
+    public static int calculateNoOfColumns(@NonNull Context context) {
 
         if (isTablet) {
             return 2;
