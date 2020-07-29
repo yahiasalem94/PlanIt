@@ -7,6 +7,8 @@ It gives you the opportunity to create different bucket lists for each place you
 you want to do in one specific place. Not only does it help you plan your trip but it also gives you insights about the top things 
 to do in each city. It also quickly helps you figure out what are the best landmarks near you.
 
+Google Play Store: https://play.google.com/store/apps/details?id=com.ysalem.android.planit
+
 ## Features
 - Browse most popular destinations
 - Browse the top things to do in each city
